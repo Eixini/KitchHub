@@ -3,11 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FrontEnd", "FrontEnd", "{0CB79C22-1C20-45F4-9564-4F66E271FF03}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{A141F3FC-4482-48D7-9D78-A1F43896A23D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KitchHub", "KitchHub\KitchHub.csproj", "{3E00D154-6E77-4851-BB87-3863BDE99927}"
 EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3E00D154-6E77-4851-BB87-3863BDE99927}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E00D154-6E77-4851-BB87-3863BDE99927}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E00D154-6E77-4851-BB87-3863BDE99927}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E00D154-6E77-4851-BB87-3863BDE99927}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
