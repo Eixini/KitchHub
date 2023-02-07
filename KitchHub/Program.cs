@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace KitchHub;
 
 public class Program
@@ -9,6 +11,10 @@ public class Program
         // Add services to the container.
         builder.Services.AddControllersWithViews();
         builder.Services.AddRazorPages();
+        builder.Services.AddDbContext<KitchHubDbContext>(options =>
+        {
+            options.UseSqlite(@"Data Source=KitchHub.db;Cache=Shared;");
+		});
 
         var app = builder.Build();
 
