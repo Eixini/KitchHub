@@ -29,3 +29,4 @@
 *.ico binary
 *.png binary
 *.jpg binary
+*.db binary
