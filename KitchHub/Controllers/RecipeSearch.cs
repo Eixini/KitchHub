@@ -7,10 +7,12 @@ namespace KitchHub.Controllers;
 public class RecipeSearch : Controller
 {
 	private readonly ILogger<RecipeSearch> _logger;
+	private readonly KitchHubDbContext _dbContext;
 
-	public RecipeSearch(ILogger<RecipeSearch> logger)
+	public RecipeSearch(ILogger<RecipeSearch> logger, KitchHubDbContext dbContext)
 	{
 		_logger = logger;
+		_dbContext = dbContext;
 	}
 
 	public IActionResult EnterIngredientsPage()
@@ -32,7 +34,9 @@ public class RecipeSearch : Controller
 		foreach (string ing in ingParts)
 			Console.WriteLine(ing);
 
-		// ...
+		var testName = _dbContext.DishTypes.FirstOrDefault();
+		Console.WriteLine(testName?.Type);
+
 		dynamic test = new ExpandoObject();
 		test.one = "It's test result";
 		test.two = 74;
