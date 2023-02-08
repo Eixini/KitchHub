@@ -6,16 +6,16 @@ namespace KitchHub;
 
 public class Recipe
 {
-    public long Id { get; set; }
+    public long RecipeId { get; set; }
 
     public string Name { get; set; } = null!;
 
     public string? Description { get; set; }
 
-    public DishType DishType { get; set; }
+    public DishType? DishType { get; set; }
 
-    public NationalKitch NationalKitch { get; set; }
+    public NationalKitch? NationalKitch { get; set; }
 
-    public virtual ICollection<Ingredient> Ingredients { get; set; }
+    public virtual ICollection<Ingredient>? Ingredients { get; set; }
 
 }

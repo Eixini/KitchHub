@@ -5,7 +5,7 @@ namespace KitchHub;
 
 public class DishType
 {
-    public long Id { get; set; }
+    public long DishTypeId { get; set; }
 
     public string Type { get; set; } = null!;
 

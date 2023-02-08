@@ -5,7 +5,7 @@ namespace KitchHub;
 
 public class IngredientsType
 {
-    public long Id { get; set; }
+    public long IngredientsTypeId { get; set; }
 
     public string Type { get; set; } = null!;
 

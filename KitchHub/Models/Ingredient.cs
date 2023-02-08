@@ -6,10 +6,11 @@ namespace KitchHub;
 
 public partial class Ingredient
 {
-    public long Id { get; set; }
+    public long IngredientId { get; set; }
 
     public string Name { get; set; } = null!;
 
     public IngredientsType IngredientsType { get; set; } = null!;
 
+	public virtual ICollection<Recipe>? Recipes { get; set; }
 }

@@ -5,7 +5,7 @@ namespace KitchHub;
 
 public class NationalKitch
 {
-    public long Id { get; set; }
+    public long NationalKitchId { get; set; }
 
     public string? National { get; set; }
 
