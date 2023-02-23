@@ -48,13 +48,13 @@ function sendIngredients() {
             processData: false,
             success: function (ingredients) {
                 if (ingredients) {
-                    alert(ingredients.three);
+                    //alert(ingredients.three);
                 } else {
                     alert("Сообщение не доставлено!");
                 }
             },
-            error: function () {
-                alert("Произошел сбой");
+            error: function (xhr, status, err) {
+                alert(xhr + status + ": " + err);
             }
             });
     }
