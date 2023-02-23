@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 using System.Dynamic;
 
@@ -29,18 +30,34 @@ public class RecipeSearch : Controller
 	[HttpGet]
 	public JsonResult SearchRecipe([FromQuery]string ingredients)
 	{
-		// Создание массива 
-		var ingParts = ingredients.Split(',');
-		foreach (string ing in ingParts)
-			Console.WriteLine(ing);
+		// Для хранения результирующего списка рецептов, удовлетворяющих введенным ингредиентам
+		var recipeResultList = new List<Recipe>();
 
-		var testName = _dbContext.DishTypes.FirstOrDefault();
-		Console.WriteLine(testName?.Type);
+		// Создание массива 
+		var ingParts = ingredients.Split(',').ToList();
+		//foreach (string ing in ingParts)
+		//	_logger.LogInformation(ing);
+
+		var recipes = _dbContext.Recipes
+			.Include(i => i.Ingredients)
+			.ToList();
+		foreach (var recipe in recipes)
+		{
+			//var ing = rec.Ingredients.Include().ToList();
+			var recipeIngredients = recipe?.Ingredients
+				.Select(x => x.Name)
+				.ToList();
+
+            if ((bool)!recipeIngredients?.Except(ingParts).Any())
+            {
+				_logger.LogInformation($"{recipe?.Name} подходит под введенные ингредиенты");
+				recipeResultList.Add(recipe);
+            }
+
+        }
 
 		dynamic test = new ExpandoObject();
-		test.one = "It's test result";
-		test.two = 74;
-		test.three = new [] { 1,2,3,4,5 };
+		test.one = $"Recipe search: {recipeResultList.Count()} resipe(s)";
 
 		return Json(test);
 	}
