@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Views\ShowRecipe\" />
     <Folder Include="wwwroot\lib\" />
   </ItemGroup>
 
