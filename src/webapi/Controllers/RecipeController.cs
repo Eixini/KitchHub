@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 using System.ComponentModel;
 using System.Dynamic;
+using System.Text.Json;
+using webapi.Models;
 
 namespace webapi.Controllers;
 
@@ -49,15 +51,13 @@ public class RecipeController : Controller
     [Route("[action]/{enteringIngredients}")]
     public JsonResult FindRecipeByIngredients([FromRoute]string enteringIngredients)
 	{
-		Console.WriteLine($"BackEnd input data: {enteringIngredients}");
 		// Для хранения результирующего списка рецептов, удовлетворяющих введенным ингредиентам
-		var recipeResultList = new List<Recipe>();
+		var recipeResultList = new List<ResultRecipe>();
 
 		// Создание массива 
 		var ingParts = enteringIngredients?.Split(',').ToList();
 		//foreach (string ing in ingParts)
 		//	_logger.LogInformation(ing);
-		Console.WriteLine($"Введено {ingParts?.Count()} ингредиента");
 
 		var recipes = _dbContext.Recipes
 			.Include(dt => dt.DishType)
@@ -74,7 +74,19 @@ public class RecipeController : Controller
 			if ((bool)!recipeIngredients?.Except(ingParts).Any())
 			{
 				_logger.LogInformation($"{recipe?.Name} подходит под введенные ингредиенты");
-				recipeResultList.Add(recipe);
+				
+				var resultRecipe = new ResultRecipe();
+				resultRecipe.Name = recipe?.Name;
+				resultRecipe.DishType = recipe?.DishType?.Type;
+				resultRecipe.NationalKitch = recipe?.NationalKitch?.National;
+				resultRecipe.Ingredients = new List<string> { };
+                foreach (var ing in recipe?.Ingredients)
+                {
+					resultRecipe?.Ingredients?.Add(new String(Convert.ToString(ing.Name)));
+                }
+                resultRecipe.Description = recipe.Description;
+				
+                recipeResultList.Add(resultRecipe);
 			}
 
 		}
@@ -85,10 +97,7 @@ public class RecipeController : Controller
 			return Json("Рецепты, удовлетворяющие введенным ингредиентам не найдены!");
 		}
 
-		dynamic jsonResult = new ExpandoObject();
-        jsonResult.one = $"Recipe search: {recipeResultList.Count()} resipe(s)";
-
-		return Json(jsonResult);
+	   return Json(recipeResultList);
 	}
 
 	public IActionResult ShowRecipes()
