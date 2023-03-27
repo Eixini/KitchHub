@@ -30,58 +30,62 @@
 <script lang="js">
     
 import axios from 'axios';
-import { defineComponent } from 'vue';
 
-    export default defineComponent({
-        data() {
-            return {
-                ingredient : "",
-                tags: []
-            };
+export default {
+    
+    name: 'EnteringIngredients',
+
+    data() {
+        return {
+            ingredient : "",
+            tags: [],
+            resultRecipe: Object,
+        };
+    },
+    methods: {
+        // Метод для получения значения с поля ввода
+        inputTextChange(){
+        //this.ingredient = event.target.value;
         },
-        methods: {
-            // Метод для получения значения с поля ввода
-            inputTextChange(){
-                //this.ingredient = event.target.value;
-            },
 
-            // Добавление нового тега при нажатии на кнопку
-            // ЗАМЕТКА: добавить проверку на наличие введенного слова, если пусто, то метод не вызывается
-            addTag(){
-                console.log(this.$refs);
-                if(this.$refs?.['enterLine']?.value != "")
-                    this.tags.push(this.$refs?.['enterLine']?.value);
-                // Очищение поля ввода ингредиентов после добавления
-                this.$refs.enterLine.value = "";
-            },
+        // Добавление нового тега при нажатии на кнопку
+        // ЗАМЕТКА: добавить проверку на наличие введенного слова, если пусто, то метод не вызывается
+        addTag(){
+            console.log(this.$refs);
+            if(this.$refs?.['enterLine']?.value != "")
+                this.tags.push(this.$refs?.['enterLine']?.value);
+            // Очищение поля ввода ингредиентов после добавления
+            this.$refs.enterLine.value = "";
+        },
             
-            // Метод для удаления тега при нажатии на него
-            deleteTag(index){
-                this.tags.splice(index,1);
-            },
+        // Метод для удаления тега при нажатии на него
+        deleteTag(index){
+            this.tags.splice(index,1);
+        },
 
-            // Метод для отправки введенных ингредиентов на сервер для поиска рецептов
-            sendIngredients(){
+        // Метод для отправки введенных ингредиентов на сервер для поиска рецептов
+        sendIngredients(){
+            let ingredientsArray = new Array();
 
-                let ingredientsArray = new Array();
+            this.tags.forEach(element => {
+                ingredientsArray.push(element);
+                console.log(element);
+            });
 
-                this.tags.forEach(element => {
-                    ingredientsArray.push(element);
-                    console.log(element);
-                });
+            let ingredientsCount = ingredientsArray.length;
 
-                let ingredientsCount = ingredientsArray.length;
+            if(ingredientsCount === 0){
+                alert("Нет введенных ингредиентов");
+            }
+            else{
+                let selectIng = ingredientsArray.join(',');
+                console.log(selectIng);
 
-                if(ingredientsCount === 0){
-                    alert("Нет введенных ингредиентов");
-                }
-                else{
-                    let selectIng = ingredientsArray.join(',');
-                    console.log(selectIng);
-
-                    axios.post("https://localhost:5192/Recipe/FindRecipeByIngredients/" + selectIng)
-                    .then(function (response) {
-                        console.log(response.data);
+                axios.post("https://localhost:5192/Recipe/FindRecipeByIngredients/" + selectIng)
+                     .then(function (response) {
+                        this.resultRecipe = response.data;
+                        console.log('Получен ответ:');
+                        console.log(this.resultRecipe);
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -90,8 +94,7 @@ import { defineComponent } from 'vue';
 
             }
         }
-
-        });
+    };
 
         /* Общие заметки:
         1. Возможно вместо кнопки для добавления тега можно будет использовать
@@ -123,6 +126,7 @@ import { defineComponent } from 'vue';
         border: 0;
         outline: 0;
         padding: 22px 18px;
+        justify-content: center;
     }
 
     .uppercase {
