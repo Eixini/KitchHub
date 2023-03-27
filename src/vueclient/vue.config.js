@@ -24,10 +24,22 @@ module.exports = {
             cert: fs.readFileSync(certFilePath),
         },
         proxy: {
-            '^/weatherforecast': {
+            '^/': {
                 target: 'https://localhost:5192/'
             }
         },
         port: 5192
-    }
+    },
+    chainWebpack: config => {
+        config.module
+          .rule('vue')
+          .use('vue-loader')
+          .tap(options => ({
+            ...options,
+            compilerOptions: {
+              // treat any tag that starts with ion- as custom elements
+              isCustomElement: tag => tag.startsWith('ion-')
+            }
+          }))
+      }
 }
