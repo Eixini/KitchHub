@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace webapi;
+﻿namespace webapi;
 
 public partial class Ingredient
 {
@@ -11,6 +7,5 @@ public partial class Ingredient
     public string Name { get; set; } = null!;
 
     public IngredientsType IngredientsType { get; set; } = null!;
-
-	public virtual ICollection<Recipe>? Recipes { get; set; }
+    public virtual ICollection<Recipe>? Recipes { get; set; }
 }
