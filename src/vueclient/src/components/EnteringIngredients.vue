@@ -39,7 +39,7 @@ export default {
         return {
             ingredient : "",
             tags: [],
-            resultRecipe: Object,
+            resultRecipe: {},
         };
     },
     methods: {
@@ -67,6 +67,8 @@ export default {
         sendIngredients(){
             let ingredientsArray = new Array();
 
+            var vm = this;
+
             this.tags.forEach(element => {
                 ingredientsArray.push(element);
                 console.log(element);
@@ -83,9 +85,9 @@ export default {
 
                 axios.post("https://localhost:5192/Recipe/FindRecipeByIngredients/" + selectIng)
                      .then(function (response) {
-                        this.resultRecipe = response.data;
+                        vm.resultRecipe = response.data;
                         console.log('Получен ответ:');
-                        console.log(this.resultRecipe);
+                        console.log(vm.resultRecipe);
                     })
                     .catch(function (error) {
                         console.log(error);
