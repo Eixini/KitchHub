@@ -22,13 +22,14 @@
         <button id="sendIngredientsButton"
                 type="button"
                 v-on:click="sendIngredients"
-                class="btn btn--primary btn--inside">Запросить</button>
+                class="btn-send">Запросить</button>
     </div>
 
 </template>
 
 <script lang="js">
     
+import { store } from '@/store';
 import axios from 'axios';
 
 export default {
@@ -85,9 +86,10 @@ export default {
 
                 axios.post("https://localhost:5192/Recipe/FindRecipeByIngredients/" + selectIng)
                      .then(function (response) {
-                        vm.resultRecipe = response.data;
+                        store.commit('saveResultRecipes',response.data);
+                        //vm.resultRecipe = response.data;
                         console.log('Получен ответ:');
-                        console.log(vm.resultRecipe);
+                        console.log(store.getters.getResultRecipes);
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -166,6 +168,64 @@ export default {
     
     .btn--inside {
         margin-left: -96px;
+    }
+
+    .btn-send {
+
+        display: inline-block;
+        box-sizing: border-box;
+        padding: 0 13px;
+        margin: 0 15px 15px 0;
+        outline: none;
+        border: 1px solid transparent; 
+        border-radius: 3px;
+        height: 32px;
+        line-height: 32px;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        color: #fff;
+        background-color: #65a3be;
+        cursor: pointer;
+        user-select: none;
+        appearance: none;
+        touch-action: manipulation;
+        position: sticky;
+
+        position: fixed;
+        bottom: 0px;
+        z-index:500;
+        align-items: center;
+
+    }
+
+    .btn-send:focus-visible {
+
+        box-shadow: 0 0 0 3px lightskyblue;
+
+    }
+
+    .btn-send:hover {
+
+        border-color: transparent;
+        background-color: #4986a1;
+        color: #fff;
+
+    }
+
+    .btn-send:active {
+
+        border-color: #6f9cbc !important;
+        background-color: #367089 !important;
+
+    }
+
+    .btn-send:disabled {
+
+        background-color: #558cb7;
+        color: #fff;
+        pointer-events: none;
+
     }
 
 </style>

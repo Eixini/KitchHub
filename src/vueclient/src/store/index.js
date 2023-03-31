@@ -1,8 +1,11 @@
 import { createStore } from 'vuex'
 
-const store = createStore({
+export const store = createStore({
     state() {
-         resultRecipe: {}
+
+        return {
+            resultRecipe: {}        // Для хранения полученных рецептов с WebAPI
+        }
 
     },
     getters: {
@@ -11,9 +14,8 @@ const store = createStore({
         }
     },
     mutations: {
-
+        saveResultRecipes(state, recipes){
+            state.resultRecipe = recipes;
+        }
     },
-    actions: {
-
-    }
 })

@@ -18,14 +18,7 @@
 export default {
 
     name: 'ShowResultRecipes',
-    props: {
-        id: Number,
-        name: String,
-        dishType: String,
-        nationalKitch: String,
-        ingredients: Array,
-        description: String
-    },
+
     data() {
         recipes: []
     },
