@@ -89,12 +89,20 @@ export default {
                      .then(function (response) {
                         store.commit('saveResultRecipes',response.data);
                         //vm.resultRecipe = response.data;
-                        console.log('Получен ответ:');
-                        console.log(store.getters.getResultRecipes);
+
+                        // Отладка
+                        //console.log('Получен ответ:');
+                        //console.log(store.state.resultRecipe[0]);
+                        //console.log(response.data);
+                        //var jsonObj = JSON.parse(response.data);
+                        //console.log(jsonObj);
+
 
                         // Логика по проверке результатов запроса рецептов
-
-                        vm.$router.push({path: '/showresultrecipes'});
+                        if (response.data.statusCode != 404)
+                            vm.$router.push({path: '/showresultrecipes'});
+                        else
+                            alert('Рецепты, удовлетворяющие введенным ингредиентам не найдены!');
                     })
                     .catch(function (error) {
                         console.log(error);
