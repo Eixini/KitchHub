@@ -29,6 +29,7 @@
 
 <script lang="js">
     
+import router from '@/router';
 import { store } from '@/store';
 import axios from 'axios';
 
@@ -90,6 +91,10 @@ export default {
                         //vm.resultRecipe = response.data;
                         console.log('Получен ответ:');
                         console.log(store.getters.getResultRecipes);
+
+                        // Логика по проверке результатов запроса рецептов
+
+                        vm.$router.push({path: '/showresultrecipes'});
                     })
                     .catch(function (error) {
                         console.log(error);

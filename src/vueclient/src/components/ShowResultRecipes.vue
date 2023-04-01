@@ -20,7 +20,6 @@ export default {
     name: 'ShowResultRecipes',
 
     data() {
-        recipes: []
     },
     methods:{
 
