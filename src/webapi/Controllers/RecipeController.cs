@@ -94,7 +94,7 @@ public class RecipeController : Controller
 		if(recipeResultList.Count == 0)
 		{
 			_logger.LogInformation("Рецепты, удовлетворяющие введенным ингредиентам не найдены!");
-			return Json("Рецепты, удовлетворяющие введенным ингредиентам не найдены!");
+			return Json(StatusCode(404));
 		}
 
 	   return Json(recipeResultList);
