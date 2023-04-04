@@ -5,7 +5,15 @@
             <input type="text"
                    ref="enterLine"
                    class="form__field"
-                   placeholder="Введите ингредиент" />
+                   placeholder="Введите ингредиент"
+                   v-model="ingredient"
+                   v-on:input="validateInput()"
+                   @keydown.enter.prevent="addTag"
+                   list="validIngredients"/>
+                   <!-- 
+            <datalist id="avaible-ingredients">
+                <option v-for="ingredient in validIngredients" v-bind:value="ingredient" v-bind:label="ingredient"></option>
+            </datalist> -->
             <button type="button"
                     v-on:click="addTag"
                     class="btn btn--primary btn--inside uppercase">Добавить</button>
@@ -34,20 +42,46 @@ import { store } from '@/store';
 import axios from 'axios';
 
 export default {
+
+    mounted(){
+        var vm = this;
+            // Метод для валидации данных, запрос идет к списку ингредиентов в БД
+            axios.get("https://localhost:5192/Recipe/InitialGetValidIngredients")
+                 .then(function(response){
+                    vm.initialValidIngredients = response.data;
+                    console.log(vm.initialValidIngredients);
+                 })
+                 .catch(function (error) {
+                    console.log(error);
+                 });
+    },
     
     name: 'EnteringIngredients',
 
     data() {
         return {
-            ingredient : "",
+            ingredient : '',
+            initialValidIngredients: [],
+            validIngredients: [],
             tags: [],
             resultRecipe: {},
         };
     },
     methods: {
         // Метод для получения значения с поля ввода
-        inputTextChange(){
-        //this.ingredient = event.target.value;
+        validateInput(){
+            
+            var vm = this;
+            // Метод для валидации данных, запрос идет к списку ингредиентов в БД
+            axios.post("https://localhost:5192/Recipe/GetValidIngredients/" + vm.ingredient)
+                 .then(function(response){
+                    vm.validIngredients = response.data;
+                    console.log(response?.data);
+                 })
+                 .catch(function (error) {
+                    console.log(error);
+                 });
+
         },
 
         // Добавление нового тега при нажатии на кнопку
@@ -58,6 +92,7 @@ export default {
                 this.tags.push(this.$refs?.['enterLine']?.value);
             // Очищение поля ввода ингредиентов после добавления
             this.$refs.enterLine.value = "";
+            this.ingredient = "";
         },
             
         // Метод для удаления тега при нажатии на него
@@ -120,7 +155,7 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 
     #tagFiled {
         margin: 10px;
@@ -130,8 +165,10 @@ export default {
     .ing__tag {
         background: #7f8ff4;
         color: #fff;
-        border-radius: 10px;
+        border-radius: 5px;
+        border: none;
         padding: 12px 36px;
+        margin: 5px;
     }
 
     .form__field {
@@ -185,7 +222,7 @@ export default {
 
     .btn-send {
 
-        display: inline-block;
+
         box-sizing: border-box;
         padding: 0 13px;
         margin: 0 15px 15px 0;
