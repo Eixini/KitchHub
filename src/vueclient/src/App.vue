@@ -6,36 +6,67 @@
           KitchHub
         </div>
         <div class="navbar">
+
           <div>
             <router-link to="/">Home</router-link>
           </div>
+
           <div>
             <router-link to="/enteringingredients">Recipe Search</router-link>
+          </div>
+
+          <div v-if="!currentUser">
+            <li>
+              <router-link to="/login"> Login </router-link>
+            </li>
+          </div>
+
+          <div v-if="!currentUser">
+            <li>
+              <router-link to="/register"> Reg </router-link>
+            </li>
+          </div>
+          
+          <div v-if="currentUser">
+            <li>
+              <router-link to="/profile"> {{ currentUser.username }} </router-link>
+            </li>
+            <li>
+              <a @click.prevent="logOut"> LogOut </a>
+            </li>
           </div>
         </div>
       </div>
     </div>
     <div class="main">
-      <div class="container">
-        <div class="content">
-
-        </div>
         <div class="content-center">
           <router-view></router-view>
         </div>
-      </div>
     </div>
     
   </div>
 </template>
 
-<script>
+<script scoped>
 
 export default {
   name: 'App',
   components: {
+  },
+
+  computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    }
+  },
+
+  methods: {
+    logOut() {
+      this.$store.dispatch('auth/logout');
+      this.$router.push('/login');
+    }
   }
-}
+};
 </script>
 
 <style>
@@ -59,6 +90,8 @@ export default {
 
   .header {
     background-color: black;
+    margin: 0;
+    padding: 0%;
   }
 
   .header .container {
