@@ -24,6 +24,7 @@ public class AccountController : Controller
     [Route("[action]")]
     public IActionResult Authenticate([FromBody] string email, [FromBody] string password)
     {
+        _jWTAuthenticationManager.Users = _dbContext.Users.ToList();
         var token = _jWTAuthenticationManager.Authenticate(email, password);
 
         // Проверка введенных данных (если пользователь есть в системе и введенные данные корректны)

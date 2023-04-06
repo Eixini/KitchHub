@@ -8,16 +8,18 @@ namespace webapi;
 public class JWTAuthenticationManager : IJWTAuthenticationManager
 {
     private readonly string _tokenKey;
-    private readonly UsersKitchHubDbContext _dbContext;
+
+    public IList<User> Users { get; set; }
 
     public JWTAuthenticationManager(string tokenKey)
     {
         this._tokenKey = tokenKey;
+        Users = new List<User>();
     }
 
     public string Authenticate(string email, string password)
     {
-        if (!_dbContext.Users.Any(u => u.Email == email && u.Password == password))
+        if (!Users.Any(u => u.Email == email && u.Password == password))
         {
             return null;
         }
