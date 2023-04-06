@@ -24,7 +24,7 @@ module.exports = {
             cert: fs.readFileSync(certFilePath),
         },
         proxy: {
-            '^/': {
+            '/': {
                 target: 'https://localhost:5192/'
             }
         },
