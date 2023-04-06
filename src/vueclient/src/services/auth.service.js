@@ -10,14 +10,12 @@ class AuthService {
             password: user.password
         })
         .then(response => {
+            console.log(response.data.accessToken);
             if (response.data.accessToken) {
               localStorage.setItem('user', JSON.stringify(response.data))
             }
               return response.data;
-        })
-        .catch(function (error) {
-            console.log(error);
-         });
+        });
         
     }
 

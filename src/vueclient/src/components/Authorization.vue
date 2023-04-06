@@ -56,7 +56,7 @@ export default {
 
     computed: {
         loggedIn() {
-            return store.state.auth.status.loggedIn;
+            return this.$store.state.auth.status.loggedIn;
         },
     },
     // Если статус верен, используется Vue Router, чтобы направить пользователя на страницу профиля:
@@ -69,6 +69,8 @@ export default {
     methods: {
         handleLogin(user) {
             this.loading = true;
+
+            console.log(user);
 
             store.dispatch("auth/login", user).then(
                 () => {
