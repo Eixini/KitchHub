@@ -22,16 +22,18 @@ public class AccountController : Controller
 
     [HttpPost]
     [Route("[action]")]
-    public IActionResult Authenticate([FromBody] string email, [FromBody] string password)
+    public IActionResult Authenticate([FromBody] Login request)
     {
         _jWTAuthenticationManager.Users = _dbContext.Users.ToList();
-        var token = _jWTAuthenticationManager.Authenticate(email, password);
+        var token = _jWTAuthenticationManager.Authenticate(request.Email, request.Password);
 
         // Проверка введенных данных (если пользователь есть в системе и введенные данные корректны)
         if (token == null)
         {
             return Unauthorized();
         }
+
+        Console.WriteLine(token);
 
         return Ok(token);
     }
