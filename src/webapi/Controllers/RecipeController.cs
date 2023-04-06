@@ -83,20 +83,20 @@ public class RecipeController : Controller
 		foreach (var recipe in recipes)
 		{
 			//var ing = rec.Ingredients.Include().ToList();
-			var recipeIngredients = recipe?.Ingredients
+			var recipeIngredients = recipe.Ingredients
 				.Select(x => x.Name)
 				.ToList();
 
-			if ((bool)!recipeIngredients?.Except(ingParts).Any())
+			if ((bool)!recipeIngredients.Except(ingParts).Any())
 			{
-				_logger.LogInformation($"{recipe?.Name} подходит под введенные ингредиенты");
+				_logger.LogInformation($"{recipe.Name} подходит под введенные ингредиенты");
 				
 				var resultRecipe = new ResultRecipe();
-				resultRecipe.Name = recipe?.Name;
-				resultRecipe.DishType = recipe?.DishType?.Type;
-				resultRecipe.NationalKitch = recipe?.NationalKitch?.National;
+				resultRecipe.Name = recipe.Name;
+				resultRecipe.DishType = recipe.DishType?.Type;
+				resultRecipe.NationalKitch = recipe.NationalKitch?.National;
 				resultRecipe.Ingredients = new List<string> { };
-                foreach (var ing in recipe?.Ingredients)
+                foreach (var ing in recipe.Ingredients)
                 {
 					resultRecipe?.Ingredients?.Add(new String(Convert.ToString(ing.Name)));
                 }
