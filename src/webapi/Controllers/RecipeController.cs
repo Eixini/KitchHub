@@ -65,7 +65,7 @@ public class RecipeController : Controller
 	/// <param name="enteringIngredients"> Введенные игредиенты из "поля тегов"</param>
 	[HttpPost("{enteringIngredients}")]
     [Route("[action]/{enteringIngredients}")]
-    public JsonResult FindRecipeByIngredients([FromRoute]string enteringIngredients)
+    public IActionResult FindRecipeByIngredients([FromRoute]string enteringIngredients)
 	{
 		// Для хранения результирующего списка рецептов, удовлетворяющих введенным ингредиентам
 		var recipeResultList = new List<ResultRecipe>();
@@ -110,10 +110,10 @@ public class RecipeController : Controller
 		if(recipeResultList.Count == 0)
 		{
 			_logger.LogInformation("Рецепты, удовлетворяющие введенным ингредиентам не найдены!");
-			return Json(StatusCode(404));
+			return StatusCode(404);
 		}
 
-	   return Json(recipeResultList);
+	   return Ok(recipeResultList);
 	}
 
 	public IActionResult ShowRecipes()
