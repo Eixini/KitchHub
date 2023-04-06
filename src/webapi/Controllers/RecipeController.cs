@@ -25,14 +25,30 @@ public class RecipeController : Controller
 		return View();
 	}
 
-	/// <summary>
-	/// Метод, который валидирует пользоватетельский ввод,
-	/// чтобы избежать некорректных данных при ввводе ингредиентов.
-	/// </summary>
-	/// <param name="search">Вводимая строка, которую нужно валидировать</param>
-	/// <returns>Список ингредиентов, которые имеются в базе данных</returns>
-	[HttpGet]
-	public async Task<List<string>> GetValidIngredients(string search)
+    /// <summary>
+    /// Метод, который валидирует пользоватетельский ввод,
+    /// чтобы избежать некорректных данных при ввводе ингредиентов.
+	/// Данный метод необходим для начальной инициализации списка всех ингредиентов.
+    /// </summary>
+    /// <returns>Список ингредиентов, которые имеются в базе данных</returns>
+    [HttpGet]
+    [Route("[action]")]
+    public async Task<List<string>> InitialGetValidIngredients()
+    {
+        return await _dbContext.Ingredients
+            .Select(i => i.Name)
+            .ToListAsync();
+    }
+
+    /// <summary>
+    /// Метод, который валидирует пользоватетельский ввод,
+    /// чтобы избежать некорректных данных при ввводе ингредиентов.
+    /// </summary>
+    /// <param name="search">Вводимая строка, которую нужно валидировать</param>
+    /// <returns>Список ингредиентов, которые имеются в базе данных</returns>
+    [HttpPost("{search}")]
+    [Route("[action]/{search}")]
+    public async Task<List<string>> GetValidIngredients([FromRoute]string search)
 	{
 		return await _dbContext.Ingredients
 			.Select(i => i.Name)
