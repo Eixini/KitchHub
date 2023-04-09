@@ -14,6 +14,7 @@
             <datalist id="avaible-ingredients">
                 <option v-for="ingredient in validIngredients" v-bind:value="ingredient" v-bind:label="ingredient"></option>
             </datalist> -->
+
             <button type="button"
                     v-on:click="addTag"
                     class="btn btn--primary btn--inside uppercase">Добавить</button>
@@ -40,6 +41,7 @@
 import router from '@/router';
 import { store } from '@/store';
 import axios from 'axios';
+//import AutoComplete from 'primevue/autocomplete'
 
 export default {
 
