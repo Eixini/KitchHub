@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
+using webapi.Authentication;
 using webapi.Models;
 
 namespace webapi.Controllers;
@@ -25,7 +26,7 @@ public class AccountController : Controller
     public IActionResult Authenticate([FromBody] Login request)
     {
         _jWTAuthenticationManager.Users = _dbContext.Users.ToList();
-        var token = _jWTAuthenticationManager.Authenticate(request.Email, request.Password);
+        var token = _jWTAuthenticationManager.Authenticate(request.Email, PasswordHashing.PasswordSHA512(request.Password));
 
         // Проверка введенных данных (если пользователь есть в системе и введенные данные корректны)
         if (token == null)
@@ -51,13 +52,11 @@ public class AccountController : Controller
             return Conflict(new { error = "User already exist" });
         }
 
-        // РЕАЛИЗОВАТЬ ХЭШИРОВАНИЕ ПАРОЛЯ !!!
-
         var newUser = new User
         {
             Email = request.Email,
             NickName = request.NickName,
-            Password = request.Password,                    // Пока без Хэширования
+            Password = PasswordHashing.PasswordSHA512(request.Password),
             RegistrationDate = DateTime.UtcNow
         };
 
@@ -66,5 +65,15 @@ public class AccountController : Controller
 
         return Ok(newUser);
     }
+
+    /// <summary>
+    /// Метод для получения данных из JWT
+    /// </summary>
+    /// <param name="token">Токен</param>
+    /// <returns>Необходимые данные из токена</returns>
+    //public IActionResult GetData(string token)
+    //{
+        
+    //}
 
 }
