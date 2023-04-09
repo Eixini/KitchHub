@@ -6,6 +6,7 @@ import ShowResultRecipes from '@/components/ShowResultRecipes.vue'
 import Profile from '@/components/Profile.vue'
 import Registration from '@/components/Registration.vue'
 import Authorization from '@/components/Authorization.vue'
+import CreateUserRecipe from '@/components/CreateUserRecipe.vue'
 
 
 const routes = [
@@ -14,7 +15,8 @@ const routes = [
     { path: '/showresultrecipes', component: ShowResultRecipes },
     { path: '/login', component: Authorization },
     { path: '/register', component: Registration },
-    { path: '/profile', component: Profile }
+    { path: '/profile', component: Profile },
+    { path: '/createrecipe', component: CreateUserRecipe }
 ]
 
 export default function(history) {
