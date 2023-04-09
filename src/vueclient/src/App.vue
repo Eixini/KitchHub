@@ -15,6 +15,10 @@
             <router-link to="/enteringingredients">Recipe Search</router-link>
           </div>
 
+          <div v-if="currentUser">
+            <router-link to="/createrecipe">Create Recipe</router-link>
+          </div>
+
           <div v-if="!currentUser">
             <li>
               <router-link to="/login"> Login </router-link>
@@ -29,7 +33,7 @@
           
           <div v-if="currentUser">
             <li>
-              <router-link to="/profile"> {{ currentUser.username }} </router-link>
+              <router-link to="/profile"> {{ currentUser.email }} </router-link>
             </li>
             <li>
               <a @click.prevent="logOut"> LogOut </a>
