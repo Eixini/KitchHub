@@ -3,7 +3,6 @@ import App from './App.vue'
 import createRouter from '@/router/index.js'
 import { createWebHistory } from 'vue-router'
 import { store } from '@/store/index.js'
-import PrimeVue from 'primevue/config'
 
 const router = createRouter(createWebHistory())
 
