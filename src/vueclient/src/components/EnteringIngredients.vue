@@ -41,8 +41,6 @@
 import router from '@/router';
 import { store } from '@/store';
 import axios from 'axios';
-//import AutoComplete from 'primevue/autocomplete'
-//import autocomplete from 'vue-autocomplete-input-tag'
 
 export default {
 

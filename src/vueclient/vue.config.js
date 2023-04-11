@@ -41,7 +41,6 @@ module.exports = {
             compilerOptions: {
               // treat any tag that starts with ion- as custom elements
               isCustomElement: tag => tag.startsWith('ion-'),
-              isCustomElement: (tag) => ['AutoComplete'].includes(tag)
             }
           }))
       }
