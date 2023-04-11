@@ -18,6 +18,7 @@
     "primevue": "^3.26.1",
     "vee-validate": "^4.8.4",
     "vue": "^3.2.13",
+    "vue-autocomplete-input-tag": "^2.0.1",
     "vue-resource": "^1.5.3",
     "vue-router": "^4.1.6",
     "vuex": "^4.1.0",

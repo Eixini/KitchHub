@@ -18,6 +18,7 @@ const certFilePath = path.join(baseFolder, `${certificateName}.pem`);
 const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
 
 module.exports = {
+
     devServer: {
         https: {
             key: fs.readFileSync(keyFilePath),
@@ -31,6 +32,7 @@ module.exports = {
         port: 5192
     },
     chainWebpack: config => {
+
         config.module
           .rule('vue')
           .use('vue-loader')
@@ -38,7 +40,8 @@ module.exports = {
             ...options,
             compilerOptions: {
               // treat any tag that starts with ion- as custom elements
-              isCustomElement: tag => tag.startsWith('ion-')
+              isCustomElement: tag => tag.startsWith('ion-'),
+              isCustomElement: (tag) => ['AutoComplete'].includes(tag)
             }
           }))
       }
