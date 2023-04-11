@@ -2,22 +2,22 @@
 
     <div class="content">
         <div id="enterIngredients">
+            
             <input type="text"
                    ref="enterLine"
                    class="form__field"
+                   autocomplete="off"
                    placeholder="Введите ингредиент"
                    v-model="ingredient"
-                   v-on:input="validateInput()"
+                   v-on:input="filterIngredients()"
                    @keydown.enter.prevent="addTag"
-                   list="validIngredients"/>
-                   <!-- 
-            <datalist id="avaible-ingredients">
-                <option v-for="ingredient in validIngredients" v-bind:value="ingredient" v-bind:label="ingredient"></option>
-            </datalist> -->
-
-            <button type="button"
-                    v-on:click="addTag"
-                    class="btn btn--primary btn--inside uppercase">Добавить</button>
+                   @focus="modal = true"
+                   @focusout="desactivate"/>
+            <div v-if="validIngredients && modal">
+                <ul v-for="validResult in validIngredients" v-bind:key="validResult" class="ingredient-list">
+                    <li @click="setIngredient(validResult)" class="ingredient-list-item">{{ validResult }}</li>
+                </ul>
+            </div>
         </div>
 
         <div id="tagField">
@@ -42,8 +42,13 @@ import router from '@/router';
 import { store } from '@/store';
 import axios from 'axios';
 //import AutoComplete from 'primevue/autocomplete'
+//import autocomplete from 'vue-autocomplete-input-tag'
 
 export default {
+
+    components: {
+       // autocomplete
+    },
 
     mounted(){
         var vm = this;
@@ -67,14 +72,34 @@ export default {
             validIngredients: [],
             tags: [],
             resultRecipe: {},
+            modal: false,
         };
     },
     methods: {
+        filterIngredients(){
+            var vm = this;
+
+            vm.validIngredients = vm.initialValidIngredients.filter(ingredient => {
+                return ingredient.toLowerCase().startsWith(vm.ingredient.toLowerCase());
+            });
+        },
+
+        // При нажатии в списке на отфильтрованный ингредиент, он вставится в строку ввода
+        setIngredient(selectIngredient){
+            var vm = this;
+
+            vm.ingredient = selectIngredient;
+            vm.$refs.enterLine.value = selectIngredient;
+
+            console.log("Select:" + selectIngredient);
+        },
+
         // Метод для получения значения с поля ввода
         validateInput(){
             
             var vm = this;
             // Метод для валидации данных, запрос идет к списку ингредиентов в БД
+            
             axios.post("https://localhost:5192/Recipe/GetValidIngredients/" + vm.ingredient)
                  .then(function(response){
                     vm.validIngredients = response.data;
@@ -83,15 +108,35 @@ export default {
                  .catch(function (error) {
                     console.log(error);
                  });
-
         },
 
         // Добавление нового тега при нажатии на кнопку
         // ЗАМЕТКА: добавить проверку на наличие введенного слова, если пусто, то метод не вызывается
         addTag(){
-            console.log(this.$refs);
-            if(this.$refs?.['enterLine']?.value != "")
+
+            var vm = this;
+
+            let ingredientsArray = new Array();
+            vm.tags.forEach(element => {
+                ingredientsArray.push(element);
+            });
+
+            // Проверка на пустую строку  this.$refs?.['enterLine']?.value == "" &&
+
+
+            // Проверка на существование тега, во избежания дублированя
+            // ВНИМАНИЕ! Возможно надо переписать, так как потенциально затратная операция
+            if(ingredientsArray.includes(this.$refs?.['enterLine']?.value)){
+                alert("Данный ингредиент уже имеется в поле ингредиентов!");
+                console.log("Include: " + ingredientsArray.includes(this.$refs?.['enterLine']?.value));
+            }
+            else if(!vm.validIngredients.includes(this.$refs?.['enterLine']?.value)){
+                alert("Данный ингредиент не найден!");
+            }
+            else{
                 this.tags.push(this.$refs?.['enterLine']?.value);
+            }
+
             // Очищение поля ввода ингредиентов после добавления
             this.$refs.enterLine.value = "";
             this.ingredient = "";
@@ -100,6 +145,11 @@ export default {
         // Метод для удаления тега при нажатии на него
         deleteTag(index){
             this.tags.splice(index,1);
+        },
+
+        desactivate(){
+            var vm = this;
+            setTimeout(() => vm.modal = false, 100);
         },
 
         // Метод для отправки введенных ингредиентов на сервер для поиска рецептов
@@ -185,41 +235,14 @@ export default {
         justify-content: center;
     }
 
-    .uppercase {
-    text-transform: uppercase;
+    .ingredient-list{
+        width: 360px;
+        background: #65a3be;
     }
 
-    .btn {
-    display: inline-block;
-    background: transparent;
-    color: inherit;
-    font: inherit;
-    border: 0;
-    outline: 0;
-    padding: 0;
-    transition: all 200ms ease-in;
-    cursor: pointer;
-    }
-
-    .btn--primary{
-        background: #7f8ff4;
+    .ingredient-list-item{
         color: #fff;
-        box-shadow: 0 0 10px 2px rgba(0, 0, 0, .1);
-        border-radius: 2px;
-        padding: 12px 36px;
-    }
-
-    .btn--primary:hover{
-        background: darken(#7f8ff4, 4%);
-    }
-
-    .btn--primary:active{
-        background: #7f8ff4;
-        box-shadow: inset 0 0 10px 2px rgba(0, 0, 0, .2);
-    }
-    
-    .btn--inside {
-        margin-left: -96px;
+        height: auto;
     }
 
     .btn-send {
