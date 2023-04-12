@@ -1,32 +1,8 @@
 <template>
 
     <div class="content">
-        <div id="enterIngredients">
-            
-            <input type="text"
-                   ref="enterLine"
-                   class="form__field"
-                   autocomplete="off"
-                   placeholder="Введите ингредиент"
-                   v-model="ingredient"
-                   v-on:input="filterIngredients()"
-                   @keydown.enter.prevent="addTag"
-                   @focus="modal = true"
-                   @focusout="desactivate"/>
-            <div v-if="validIngredients && modal">
-                <ul v-for="validResult in validIngredients" v-bind:key="validResult" class="ingredient-list">
-                    <li @click="setIngredient(validResult)" class="ingredient-list-item">{{ validResult }}</li>
-                </ul>
-            </div>
-        </div>
 
-        <div id="tagField">
-        <!-- Поле тегов (ингредиентов) -->
-        <button type="button" v-for="(tag, index) in tags"
-                :key="index"
-                class="ing__tag"
-                v-on:click="deleteTag(index)">{{tag}}</button>
-        </div>
+        <InputAutocomplete :avaible-ingredients="avaibleIngredients"/>
 
         <button id="sendIngredientsButton"
                 type="button"
@@ -37,15 +13,15 @@
 </template>
 
 <script lang="js">
-    
-import router from '@/router';
+
 import { store } from '@/store';
 import axios from 'axios';
+import InputAutocomplete from './partial/InputAutocomplete.vue';
 
 export default {
 
     components: {
-       // autocomplete
+        InputAutocomplete,
     },
 
     mounted(){
@@ -53,8 +29,8 @@ export default {
             // Метод для валидации данных, запрос идет к списку ингредиентов в БД
             axios.get("https://localhost:5192/Recipe/InitialGetValidIngredients")
                  .then(function(response){
-                    vm.initialValidIngredients = response.data;
-                    console.log(vm.initialValidIngredients);
+                    vm.avaibleIngredients = response.data;
+                    console.log(vm.avaibleIngredients);
                  })
                  .catch(function (error) {
                     console.log(error);
@@ -65,91 +41,12 @@ export default {
 
     data() {
         return {
-            ingredient : '',
-            initialValidIngredients: [],
-            validIngredients: [],
-            tags: [],
+            avaibleIngredients: [],
             resultRecipe: {},
-            modal: false,
         };
     },
     methods: {
-        filterIngredients(){
-            var vm = this;
-
-            vm.validIngredients = vm.initialValidIngredients.filter(ingredient => {
-                return ingredient.toLowerCase().startsWith(vm.ingredient.toLowerCase());
-            });
-        },
-
-        // При нажатии в списке на отфильтрованный ингредиент, он вставится в строку ввода
-        setIngredient(selectIngredient){
-            var vm = this;
-
-            vm.ingredient = selectIngredient;
-            vm.$refs.enterLine.value = selectIngredient;
-
-            console.log("Select:" + selectIngredient);
-        },
-
-        // Метод для получения значения с поля ввода
-        validateInput(){
-            
-            var vm = this;
-            // Метод для валидации данных, запрос идет к списку ингредиентов в БД
-            
-            axios.post("https://localhost:5192/Recipe/GetValidIngredients/" + vm.ingredient)
-                 .then(function(response){
-                    vm.validIngredients = response.data;
-                    console.log(response?.data);
-                 })
-                 .catch(function (error) {
-                    console.log(error);
-                 });
-        },
-
-        // Добавление нового тега при нажатии на кнопку
-        // ЗАМЕТКА: добавить проверку на наличие введенного слова, если пусто, то метод не вызывается
-        addTag(){
-
-            var vm = this;
-
-            let ingredientsArray = new Array();
-            vm.tags.forEach(element => {
-                ingredientsArray.push(element);
-            });
-
-            // Проверка на пустую строку  this.$refs?.['enterLine']?.value == "" &&
-
-
-            // Проверка на существование тега, во избежания дублированя
-            // ВНИМАНИЕ! Возможно надо переписать, так как потенциально затратная операция
-            if(ingredientsArray.includes(this.$refs?.['enterLine']?.value)){
-                alert("Данный ингредиент уже имеется в поле ингредиентов!");
-                console.log("Include: " + ingredientsArray.includes(this.$refs?.['enterLine']?.value));
-            }
-            else if(!vm.validIngredients.includes(this.$refs?.['enterLine']?.value)){
-                alert("Данный ингредиент не найден!");
-            }
-            else{
-                this.tags.push(this.$refs?.['enterLine']?.value);
-            }
-
-            // Очищение поля ввода ингредиентов после добавления
-            this.$refs.enterLine.value = "";
-            this.ingredient = "";
-        },
-            
-        // Метод для удаления тега при нажатии на него
-        deleteTag(index){
-            this.tags.splice(index,1);
-        },
-
-        desactivate(){
-            var vm = this;
-            setTimeout(() => vm.modal = false, 100);
-        },
-
+ 
         // Метод для отправки введенных ингредиентов на сервер для поиска рецептов
         sendIngredients(){
             let ingredientsArray = new Array();
@@ -173,16 +70,6 @@ export default {
                 axios.post("https://localhost:5192/Recipe/FindRecipeByIngredients/" + selectIng)
                      .then(function (response) {
                         store.commit('saveResultRecipes',response.data);
-                        //vm.resultRecipe = response.data;
-
-                        // Отладка
-                        //console.log('Получен ответ:');
-                        //console.log(store.state.resultRecipe[0]);
-                        //console.log(response.data);
-                        //var jsonObj = JSON.parse(response.data);
-                        //console.log(jsonObj);
-
-
                         // Логика по проверке результатов запроса рецептов
                         if (response.data.statusCode != 404)
                             vm.$router.push({path: '/showresultrecipes'});
@@ -197,51 +84,9 @@ export default {
             }
         }
     };
-
-        /* Общие заметки:
-        1. Возможно вместо кнопки для добавления тега можно будет использовать
-        <input v-on:keyup.enter="submit">
-        */
-
 </script>
 
 <style scoped>
-
-    #tagFiled {
-        margin: 10px;
-        word-spacing: 5px;
-    }
-
-    .ing__tag {
-        background: #7f8ff4;
-        color: #fff;
-        border-radius: 5px;
-        border: none;
-        padding: 12px 36px;
-        margin: 5px;
-    }
-
-    .form__field {
-        width: 360px;
-        background: #fff;
-        color: #a3a3a3;
-        font: inherit;
-        box-shadow: 0 6px 10px 0 rgba(0, 0, 0 , .1);
-        border: 0;
-        outline: 0;
-        padding: 22px 18px;
-        justify-content: center;
-    }
-
-    .ingredient-list{
-        width: 360px;
-        background: #65a3be;
-    }
-
-    .ingredient-list-item{
-        color: #fff;
-        height: auto;
-    }
 
     .btn-send {
 
