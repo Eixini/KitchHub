@@ -40,6 +40,24 @@ public class RecipeController : Controller
             .ToListAsync();
     }
 
+    [HttpGet]
+    [Route("[action]")]
+    public async Task<List<string>> GetDishType()
+    {
+        return await _dbContext.DishTypes
+			.Select(dt => dt.Type)
+			.ToListAsync();
+    }
+
+    [HttpGet]
+    [Route("[action]")]
+    public async Task<List<string>> GetNationalKitch()
+    {
+        return await _dbContext.NationalKitches
+            .Select(nk => nk.National)
+            .ToListAsync();
+    }
+
     /// <summary>
     /// Метод, который валидирует пользоватетельский ввод,
     /// чтобы избежать некорректных данных при ввводе ингредиентов.
@@ -57,13 +75,13 @@ public class RecipeController : Controller
 			.ToListAsync();
 	}
 
-	/// <summary>
-	/// Метод для получения ингредиентов из "поля тегов" и поиск рецептов по имеющимся тегам.
-	/// Ингредиенты получаются из представления в виде массива строк,
-	/// после чего, происходит сравнение введенных ингредиентов с ингредиентами рецептов из БД
-	/// </summary>
-	/// <param name="enteringIngredients"> Введенные игредиенты из "поля тегов"</param>
-	[HttpPost("{enteringIngredients}")]
+    /// <summary>
+    /// Метод для получения ингредиентов из "поля тегов" и поиск рецептов по имеющимся тегам.
+    /// Ингредиенты получаются из представления в виде массива строк,
+    /// после чего, происходит сравнение введенных ингредиентов с ингредиентами рецептов из БД
+    /// </summary>
+    /// <param name="enteringIngredients"> Введенные игредиенты из "поля тегов"</param>
+    [HttpPost("{enteringIngredients}")]
     [Route("[action]/{enteringIngredients}")]
     public IActionResult FindRecipeByIngredients([FromRoute]string enteringIngredients)
 	{
