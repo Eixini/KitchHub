@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Dynamic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Reflection.Metadata;
 using webapi.Authentication;
 using webapi.Models;
 
@@ -34,9 +36,16 @@ public class AccountController : Controller
             return Unauthorized();
         }
 
-        Console.WriteLine(token);
+        var user = _dbContext.Users.FirstOrDefault(e => e.Email == request.Email);
 
-        return Ok(token);
+        dynamic result = new ExpandoObject();
+        result.accessToken = token;
+        result.email = user.Email;
+        result.nickname = user.NickName;
+
+        Console.WriteLine(result);
+
+        return Ok(result);
     }
 
     [HttpPost]
