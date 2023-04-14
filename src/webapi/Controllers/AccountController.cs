@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Dynamic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using webapi.Authentication;
 using webapi.Models;
 
@@ -10,11 +11,11 @@ namespace webapi.Controllers;
 public class AccountController : Controller
 {
     private readonly ILogger<AccountController> _logger;
-    private readonly UsersKitchHubDbContext _dbContext;
+    private readonly KitchHubDbContext _dbContext;
     private readonly IJWTAuthenticationManager _jWTAuthenticationManager;
 
     public AccountController(ILogger<AccountController> logger,
-        UsersKitchHubDbContext dbContext,
+        KitchHubDbContext dbContext,
         IJWTAuthenticationManager jWTAuthenticationManager)
     {
         _logger = logger;
@@ -65,7 +66,8 @@ public class AccountController : Controller
             Email = request.Email,
             NickName = request.NickName,
             Password = PasswordHashing.PasswordSHA512(request.Password),
-            RegistrationDate = DateTime.UtcNow
+            RegistrationDate = DateTime.UtcNow,
+            Role = _dbContext.Roles.FirstOrDefault(r => r.RoleId == 1)!
         };
 
         _dbContext.Users.Update(newUser);
