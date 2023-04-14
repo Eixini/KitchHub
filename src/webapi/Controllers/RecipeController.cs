@@ -1,9 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.JSInterop;
-using System.ComponentModel;
-using System.Dynamic;
-using System.Text.Json;
 using webapi.Models;
 
 namespace webapi.Controllers;
