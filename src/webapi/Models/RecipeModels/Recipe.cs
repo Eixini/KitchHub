@@ -17,7 +17,9 @@ public class Recipe
     public NationalKitch? NationalKitch { get; set; }
 
     public virtual ICollection<Ingredient>? Ingredients { get; set; }
+    [ForeignKey("IssuerId")]
     public User? WhoAdded { get; set; }
+    public long? IssuerId { get; set; } = null!;
 
     public DateTime DateAdded { get; set; }
     public DateTime DateUpdated { get; set; }

@@ -36,8 +36,7 @@ public class KitchHubDbContext : DbContext
 		modelBuilder.Entity<NationalKitch>().ToTable(nameof(NationalKitches));
 		modelBuilder.Entity<Recipe>().ToTable(nameof(Recipes));
 
-        modelBuilder.Entity<User>().ToTable(nameof(Users))
-                                   .HasNoKey();
+        modelBuilder.Entity<User>().ToTable(nameof(Users));
         modelBuilder.Entity<UserBan>().ToTable(nameof(UserBans));
         modelBuilder.Entity<Role>().ToTable(nameof(Roles))
                                    .HasData(
