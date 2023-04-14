@@ -17,5 +17,10 @@ public class Recipe
     public NationalKitch? NationalKitch { get; set; }
 
     public virtual ICollection<Ingredient>? Ingredients { get; set; }
+    public User? WhoAdded { get; set; }
+
+    public DateTime DateAdded { get; set; }
+    public DateTime DateUpdated { get; set; }
+    public bool Published { get; set; }
 
 }
