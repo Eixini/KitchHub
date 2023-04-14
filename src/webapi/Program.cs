@@ -23,13 +23,8 @@ public class Program
         builder.Services.AddSwaggerGen();
         builder.Services.AddDbContext<KitchHubDbContext> (options =>
         {
-            options.UseSqlite(@"Data Source=KitchHub.db;Cache=Shared;");
+            options.UseSqlite(builder.Configuration.GetSection("ConnectionStrings:KitchHubDB").Value);
 
-        });
-
-        builder.Services.AddDbContext<UsersKitchHubDbContext>(options =>
-        {
-            options.UseSqlite(@"Data Source=UsersKitchHub.db;Cache=Shared;");
         });
 
         builder.Services.AddAuthentication(conf =>
