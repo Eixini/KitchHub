@@ -13,5 +13,9 @@ public class ResultRecipe
     public string? NationalKitch { get; set; }
 
     public List<string>? Ingredients { get; set; }
+    public long? IssuerID { get; set; }
+
+    public DateTime DateAdded { get; set; }
+    public DateTime DateUpdated { get; set; }
 
 }

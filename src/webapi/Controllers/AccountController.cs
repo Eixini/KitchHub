@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Dynamic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -28,7 +29,7 @@ public class AccountController : Controller
     public IActionResult Authenticate([FromBody] Login request)
     {
         _jWTAuthenticationManager.Users = _dbContext.Users.ToList();
-        var token = _jWTAuthenticationManager.Authenticate(request.Email, PasswordHashing.PasswordSHA512(request.Password));
+        var token = _jWTAuthenticationManager.Authenticate(request.Email,PasswordHashing.PasswordSHA512(request.Password));
 
         // Проверка введенных данных (если пользователь есть в системе и введенные данные корректны)
         if (token == null)
@@ -36,12 +37,21 @@ public class AccountController : Controller
             return Unauthorized();
         }
 
-        var user = _dbContext.Users.FirstOrDefault(u => u.Email == request.Email);
+        var user = _dbContext.Users.Include(r => r.Role)
+                                   .FirstOrDefault(u => u.Email == request.Email);
+
+        //if (user.UserBan != null)
+        //{
+        //    return Conflict(new { error = "User has banned!" });
+        //}
 
         dynamic result = new ExpandoObject();
         result.accessToken = token;
         result.email = user.Email;
         result.nickname = user.NickName;
+        result.role = user.Role.RoleId;                // Работает не корректно!
+        result.avatar = user.Avatar;
+        result.birthday = user.Birthday;
 
         Console.WriteLine(result);
 
