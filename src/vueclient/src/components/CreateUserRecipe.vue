@@ -10,7 +10,9 @@
                    v-model="recipeName"/>
         </div>
 
-        <InputAutocomplete :avaible-ingredients="avaibleIngredients"/>
+        <InputAutocomplete :avaible-ingredients="avaibleIngredients"
+                           @ingredientsAdded="ingredientAdd"
+                           @ingredientRemoved="ingredientRemove"/>
 
         <div>
             <span> Национальность блюда </span>
@@ -94,6 +96,7 @@
 
                 // Данные, связанные с вводом ингредиентов и их фильтрации (из списки доступных)
                 avaibleIngredients: [],
+                selectIngredients: [],
 
                 // Национальности кухни / свой рецепт
                 nationalKitch: [],
@@ -126,8 +129,8 @@
                     description: vm.recipeDescription,
                     Type: vm.selectDishType,
                     nationalkitch: vm.selectNationalKitch,
-                    ingredients: [], // получать ингредиенты из списка (РЕАЛИЗОВАТЬ!)
-                    WhoAdded: this.currentUser.nickname,
+                    ingredients: vm.selectIngredients, // получать ингредиенты из списка (РЕАЛИЗОВАТЬ!)
+                    WhoAdded: vm.currentUser.nickname,
                 }, )
                 .then(response => {
                     alert(response.data);
@@ -136,6 +139,29 @@
                     console.log(error.response.data);
                 });
             },
+
+            ingredientAdd(ing){
+                console.log('Ing add:' + ing);
+                let vm = this;
+                vm.selectIngredients.push(ing);
+                
+                // Отладка
+                vm.selectIngredients.forEach(el => {
+                    console.log(el);
+                });
+            },
+
+            ingredientRemove(index){
+                let vm = this;
+                //vm.selectIngredients.splice(index,1);
+                delete vm.selectIngredients[index];
+
+                // Отладка
+                console.log('======== Ingredients array ========');
+                vm.selectIngredients.forEach(el => {
+                    console.log(el);
+                });
+            }
         },
         
         computed: {

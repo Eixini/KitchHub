@@ -74,6 +74,7 @@
                 }
                 else{
                     vm.ingredients.push(vm.ingredient);
+                    vm.$emit('ingredientsAdded',vm.ingredient);
                 }
                 
                 // Очищение поля ввода ингредиентов после добавления
@@ -84,6 +85,7 @@
             deleteIngredient(index) {
                 var vm = this;
                 vm.ingredients.splice(index,1);
+                vm.$emit('ingredientRemoved', index);
             },
 
             // Отображение отфильрованного списка при вводе ингредиента

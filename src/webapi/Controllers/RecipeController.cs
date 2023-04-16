@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using System.Linq;
 using webapi.Models;
 
@@ -76,14 +77,24 @@ public class RecipeController : Controller
     [Route("[action]")]
     public IActionResult CreateRecipe([FromBody] CreateRecipeModel request)
 	{
-		Console.WriteLine($"Input data: {request.Type}");
+        //var ingredientsArray = new List<Ingredient>();
+        //foreach (var ingredient in request.Ingredients)
+        //{
+        //    var currentIngredient = new Ingredient();
+        //    currentIngredient.Name = request.Name;
+        //    currentIngredient.IngredientsType = _dbContext.Ingredients
+        //                                                  .Select(t => t.IngredientsType)
+        //                                                  .Where(n => n.Name == ingredient);
 
-		var newRecipe = new Recipe {
+        //    ingredientsArray.Add(currentIngredient);
+        //}
+
+        var newRecipe = new Recipe {
 			Name = request.Name,
 			Description = request.Description,
             DishType = _dbContext.DishTypes.FirstOrDefault(d => d.Type == request.Type),
             NationalKitch = _dbContext.NationalKitches.FirstOrDefault(nk => nk.National == request.NationalKitch),
-            //	Ingredients = request.Ingredients,
+            //Ingredients = ingredientsArray,
             WhoAdded = _dbContext.Users.FirstOrDefault(u => u.NickName == request.WhoAdded),
 			DateAdded = DateTime.UtcNow,
 			DateUpdated = DateTime.UtcNow,
