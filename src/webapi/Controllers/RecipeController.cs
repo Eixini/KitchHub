@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using webapi.Models;
 
 namespace webapi.Controllers;
@@ -71,6 +72,54 @@ public class RecipeController : Controller
 			.ToListAsync();
 	}
 
+    [HttpPost]
+    [Route("[action]")]
+    public IActionResult CreateRecipe([FromBody] CreateRecipeModel request)
+	{
+		Console.WriteLine($"Input data: {request.Type}");
+
+		var newRecipe = new Recipe {
+			Name = request.Name,
+			Description = request.Description,
+            DishType = _dbContext.DishTypes.FirstOrDefault(d => d.Type == request.Type),
+            NationalKitch = _dbContext.NationalKitches.FirstOrDefault(nk => nk.National == request.NationalKitch),
+            //	Ingredients = request.Ingredients,
+            WhoAdded = _dbContext.Users.FirstOrDefault(u => u.NickName == request.WhoAdded),
+			DateAdded = DateTime.UtcNow,
+			DateUpdated = DateTime.UtcNow,
+			Published = false
+		};
+
+        _dbContext.Recipes.Update(newRecipe);
+        _dbContext.SaveChanges();
+
+        return Ok($"Recipe added. Waiting for moderation.");
+    }
+
+    /// <summary>
+    /// Метод возвращает рецепты, которые были созданы пользователями,
+    /// но не были опубликованы, так как ожидают модерации
+    /// </summary>
+    /// <returns>Список необходимых данных рецептов</returns>
+    [HttpGet]
+    [Route("[action]")]
+    public IActionResult GetUnpublishedRecipes()
+    {
+        return Ok(_dbContext.Recipes
+            .Where(p => p.Published == false)
+            .Select(r => 
+                new
+                {
+                    r.RecipeId,
+                    r.Name,
+                    r.Description,
+                    r.NationalKitch.National,
+                    r.DishType.Type,
+                    r.WhoAdded.NickName
+                })
+            .ToList());
+    }
+
     /// <summary>
     /// Метод для получения ингредиентов из "поля тегов" и поиск рецептов по имеющимся тегам.
     /// Ингредиенты получаются из представления в виде массива строк,
@@ -93,7 +142,11 @@ public class RecipeController : Controller
 			.Include(dt => dt.DishType)
 			.Include(nk => nk.NationalKitch)
 			.Include(i => i.Ingredients)
-			.ToList();
+            .Include(w => w.WhoAdded)
+			.Include(d => d.DateAdded)
+			.Include(d => d.DateUpdated)
+			.Where(p => p.Published == true)
+            .ToList();
 		foreach (var recipe in recipes)
 		{
 			//var ing = rec.Ingredients.Include().ToList();

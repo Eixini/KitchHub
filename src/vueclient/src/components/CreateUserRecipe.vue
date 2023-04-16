@@ -109,11 +109,39 @@
         },
 
         methods: {
+           //getIngredientsFromTags(ing){       
+             //   let ingredientsArray = new Array();
+               // ing.forEach(element => {
+                 //   ingredientsArray.push(element);
+               // });
+                //return ingredientsArray;
+            //},
             
             // Рецепт отправляется на модерацию, после проверки добавляется в БД/удаляется/отправляется на редактирование
             addRecipe(){
-
+                var vm = this;
+                console.log('Select DishType: ' + vm.selectDishType);
+                axios.post('https://localhost:5192/Recipe/CreateRecipe', {
+                    name: vm.recipeName,
+                    description: vm.recipeDescription,
+                    Type: vm.selectDishType,
+                    nationalkitch: vm.selectNationalKitch,
+                    ingredients: [], // получать ингредиенты из списка (РЕАЛИЗОВАТЬ!)
+                    WhoAdded: this.currentUser.nickname,
+                }, )
+                .then(response => {
+                    alert(response.data);
+                })
+                .catch(function (error) {
+                    console.log(error.response.data);
+                });
             },
-        }
+        },
+        
+        computed: {
+            currentUser() {
+                return this.$store.state.auth.user;
+            }
+        },
     }
 </script>
