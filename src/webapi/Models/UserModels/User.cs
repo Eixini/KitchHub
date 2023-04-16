@@ -11,7 +11,7 @@ public class User
     public DateTime RegistrationDate { get; set; }
 
     public byte[]? Avatar { get; set; }
-    public Role Role { get; set; }
+    public Role Role { get; set; } = null!;
     public DateTime? Birthday { get; set; }
     public UserBan? UserBan { get; set; }
 }

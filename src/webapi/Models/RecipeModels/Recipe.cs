@@ -19,10 +19,10 @@ public class Recipe
     public virtual ICollection<Ingredient>? Ingredients { get; set; }
     [ForeignKey("IssuerId")]
     public User? WhoAdded { get; set; }
-    public long? IssuerId { get; set; } = null!;
+    public long? IssuerId { get; set; }
 
-    public DateTime DateAdded { get; set; }
-    public DateTime DateUpdated { get; set; }
+    public DateTime? DateAdded { get; set; }
+    public DateTime? DateUpdated { get; set; }
     public bool Published { get; set; }
 
 }

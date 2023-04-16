@@ -92,7 +92,6 @@
                 setTimeout(() => vm.modal = false, 100);
             },
 
-
         }
     }
 </script>
