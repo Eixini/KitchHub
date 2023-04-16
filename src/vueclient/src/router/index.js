@@ -56,7 +56,7 @@ const routes = [
     {
         // Панель управления для модераторов и администраторов
         path: '/moder',
-        moder: 'moder',
+        name: 'moder',
         component: ModerPanel
     },
 ]

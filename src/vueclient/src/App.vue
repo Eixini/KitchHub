@@ -19,6 +19,14 @@
             <router-link to="/createrecipe">Create Recipe</router-link>
           </div>
 
+          <div v-if="currentUser && (currentUser.role == 2 || currentUser.role == 3)">
+            <router-link to="/moder">Moderation</router-link>
+          </div>
+
+          <div v-if="currentUser && currentUser.role == 3">
+            <router-link to="/moder">Administration</router-link>
+          </div>
+
           <div v-if="!currentUser">
             <li>
               <router-link to="/login"> Login </router-link>
