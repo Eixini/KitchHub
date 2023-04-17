@@ -16,7 +16,7 @@
             </ul>
         </div>
         <div id="ingredient-field">
-            <button type="button" v-for="(ing, index) in ingredients"
+            <button type="button" v-for="(ing, index) in $store.getters.getIngredients"
                     :key="index"
                     v-on:click="deleteIngredient(index)">{{ ing }}</button>
             </div>
@@ -25,12 +25,19 @@
 
 <script lang="js">
     //import { ref } from 'vue';
+    import { store } from '@/store';
 
     export default {
         name: "InputAutocomplete",
         props: {
             avaibleIngredients: Array,
         },
+
+        mounted(){
+            // Очистка списка ингредиентов из хранилища
+            store.commit('clearIngredientList');
+        },
+
         data() {
             return {
                 ingredient: "",
@@ -73,7 +80,9 @@
                     alert("Данный ингредиент не найден!");
                 }
                 else{
-                    vm.ingredients.push(vm.ingredient);
+                    //vm.store.addIngredient(vm.ingredient);
+                    store.commit('addIngredient',vm.ingredient);
+                    //vm.ingredients.push(vm.ingredient);
                     vm.$emit('ingredientsAdded',vm.ingredient);
                 }
                 
@@ -84,7 +93,8 @@
             // Удаление ингредиента их создаваемого рецепта
             deleteIngredient(index) {
                 var vm = this;
-                vm.ingredients.splice(index,1);
+                store.commit('removeIngredient',index);
+                //vm.ingredients.splice(index,1);
                 vm.$emit('ingredientRemoved', index);
             },
 

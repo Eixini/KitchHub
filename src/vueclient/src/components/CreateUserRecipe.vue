@@ -48,6 +48,7 @@
 
 <script lang="js">
     import axios from 'axios';
+    import { store } from '@/store';
     import InputAutocomplete from './partial/InputAutocomplete.vue';
 
     export default {
@@ -141,12 +142,12 @@
             },
 
             ingredientAdd(ing){
-                console.log('Ing add:' + ing);
+                //console.log('Ing add:' + ing);
                 let vm = this;
                 vm.selectIngredients.push(ing);
                 
                 // Отладка
-                vm.selectIngredients.forEach(el => {
+                store.getters.getIngredients.forEach(el => {
                     console.log(el);
                 });
             },
@@ -154,11 +155,11 @@
             ingredientRemove(index){
                 let vm = this;
                 //vm.selectIngredients.splice(index,1);
-                delete vm.selectIngredients[index];
+                //delete vm.selectIngredients[index];
 
                 // Отладка
                 console.log('======== Ingredients array ========');
-                vm.selectIngredients.forEach(el => {
+                store.getters.getIngredients.forEach(el => {
                     console.log(el);
                 });
             }

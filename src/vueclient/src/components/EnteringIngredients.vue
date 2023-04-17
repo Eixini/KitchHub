@@ -25,6 +25,10 @@ export default {
     },
 
     mounted(){
+
+        // Очистка списка ингредиентов из хранилища
+        store.commit('clearIngredientList');
+
         var vm = this;
             // Метод для валидации данных, запрос идет к списку ингредиентов в БД
             axios.get("https://localhost:5192/Recipe/InitialGetValidIngredients")
@@ -53,7 +57,7 @@ export default {
 
             var vm = this;
 
-            this.tags.forEach(element => {
+            store.getters.getIngredients.forEach(element => {
                 ingredientsArray.push(element);
                 console.log(element);
             });
