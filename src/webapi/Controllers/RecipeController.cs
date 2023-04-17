@@ -73,35 +73,42 @@ public class RecipeController : Controller
 			.ToListAsync();
 	}
 
+    /// <summary>
+    /// Создание пользовательского рецепта
+    /// </summary>
+    /// <param name="request">Данные, введенные пользователем на стороне клиента</param>
+    /// <returns>Сообщение об процессе создания рецепта</returns>
     [HttpPost]
     [Route("[action]")]
     public IActionResult CreateRecipe([FromBody] CreateRecipeModel request)
 	{
-        //var ingredientsArray = new List<Ingredient>();
-        //foreach (var ingredient in request.Ingredients)
-        //{
-        //    var currentIngredient = new Ingredient();
-        //    currentIngredient.Name = request.Name;
-        //    currentIngredient.IngredientsType = _dbContext.Ingredients
-        //                                                  .Select(t => t.IngredientsType)
-        //                                                  .Where(n => n.Name == ingredient);
+        var ingredientsArray = new List<Ingredient>();
+        foreach (var ingredient in request.Ingredients)
+        {
+            var currentIngredient = new Ingredient();
+            currentIngredient.Name = request.Name;
+            //Console.WriteLine("Тип ингредиента:" + _dbContext.Ingredients.FirstOrDefault(n => n.Name == ingredient).IngredientsType);
+            currentIngredient.IngredientsType = _dbContext.Ingredients
+                                                          .FirstOrDefault(n => n.Name == ingredient)
+                                                          .IngredientsType;
 
-        //    ingredientsArray.Add(currentIngredient);
-        //}
+
+            ingredientsArray.Add(currentIngredient);
+        }
 
         var newRecipe = new Recipe {
 			Name = request.Name,
 			Description = request.Description,
             DishType = _dbContext.DishTypes.FirstOrDefault(d => d.Type == request.Type),
             NationalKitch = _dbContext.NationalKitches.FirstOrDefault(nk => nk.National == request.NationalKitch),
-            //Ingredients = ingredientsArray,
+            Ingredients = ingredientsArray,
             WhoAdded = _dbContext.Users.FirstOrDefault(u => u.NickName == request.WhoAdded),
 			DateAdded = DateTime.UtcNow,
 			DateUpdated = DateTime.UtcNow,
 			Published = false
 		};
 
-        _dbContext.Recipes.Update(newRecipe);
+        _dbContext.Recipes.Add(newRecipe);
         _dbContext.SaveChanges();
 
         return Ok($"Recipe added. Waiting for moderation.");

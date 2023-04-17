@@ -7,10 +7,10 @@ public class KitchHubDbContext : DbContext
     public KitchHubDbContext(DbContextOptions<KitchHubDbContext> options)
         : base(options)
     {
-		Database.EnsureCreated();
+		//Database.EnsureCreated();
 
-        //if(!Database.EnsureCreated())
-        //    InitializeRoles();
+        if (!Database.CanConnect())
+            InitializeRoles();
     }
 
     // Данные для рецептов
@@ -46,11 +46,11 @@ public class KitchHubDbContext : DbContext
                                            );
     }
 
-    //private void InitializeRoles()
-    //{
-    //    Roles.Add(new Role(1 ,"User"));
-    //    Roles.Add(new Role(2, "Moderator"));
-    //    Roles.Add(new Role(3, "Administrator"));
-    //    SaveChanges();
-    //}
+    private void InitializeRoles()
+    {
+        Roles.Add(new Role(1, "User"));
+        Roles.Add(new Role(2, "Moderator"));
+        Roles.Add(new Role(3, "Administrator"));
+        SaveChanges();
+    }
 }
