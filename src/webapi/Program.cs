@@ -1,75 +1,108 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 using System.Text;
-using System.Configuration;
-using Microsoft.Extensions.Configuration;
+using webapi;
 
-namespace webapi;
+var builder = WebApplication.CreateBuilder(args);
+var tokenKey = builder.Configuration.GetValue<string>("TokenKey");
+var key = Encoding.ASCII.GetBytes(tokenKey);
 
-public class Program
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddCors();
+builder.Services.AddSwaggerGen(options =>
 {
-    public static void Main(string[] args)
+    options.SwaggerDoc("v0.1", new OpenApiInfo
     {
-
-        var builder = WebApplication.CreateBuilder(args);
-
-        var tokenKey = builder.Configuration.GetValue<string>("TokenKey");
-        var key = Encoding.ASCII.GetBytes(tokenKey);
-
-        builder.Services.AddControllers();
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddCors();
-        builder.Services.AddSwaggerGen();
-        builder.Services.AddDbContext<KitchHubDbContext> (options =>
+        Version = "v0.1",
+        Title = "KitchHub",
+        Description = "Recipe search service",
+    });
+    options.ResolveConflictingActions(ApiDescription => ApiDescription.First());
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "bearer"
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
         {
-            options.UseSqlite(builder.Configuration.GetSection("ConnectionStrings:KitchHubDB").Value);
-
-        });
-
-        builder.Services.AddAuthentication(conf =>
-        {
-            conf.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            conf.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(x =>
-        {
-            x.RequireHttpsMetadata = false;
-            x.SaveToken = true;
-            x.TokenValidationParameters = new TokenValidationParameters
+            new OpenApiSecurityScheme
             {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = false,
-                ValidateAudience = false
-            };
-        });
-        builder.Services.AddSingleton<IJWTAuthenticationManager>(new JWTAuthenticationManager(tokenKey));
-
-        var app = builder.Build();
-
-        // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[]{}
         }
-        else
-        {
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
-        }
+    });
 
-        app.UseCors(builder => builder.AllowAnyOrigin()
-                                      .AllowAnyMethod());
+    var xmlFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));
+});
+builder.Services.AddDbContext<KitchHubDbContext> (options =>
+{
+    options.UseSqlite(builder.Configuration.GetSection("ConnectionStrings:KitchHubDB").Value);
+    //options.UseSqlite("Data Source=\"" +
+    //    Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) +
+    //    "\\KitchHubDB.db\"");
 
-        app.UseHttpsRedirection();
+});
 
-        app.UseAuthentication();
-        app.UseAuthorization();
+builder.Services.AddAuthentication(conf =>
+{
+    conf.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    conf.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(x =>
+{
+    x.RequireHttpsMetadata = false;
+    x.SaveToken = true;
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
+builder.Services.AddSingleton<IJWTAuthenticationManager>(new JWTAuthenticationManager(tokenKey));
 
+var app = builder.Build();
 
-        app.MapControllers();
-
-        app.Run();
-    }
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v0.1/swagger.json", "v0.1");
+    });
 }
+else
+{
+    app.UseDefaultFiles();
+    app.UseStaticFiles();
+}
+
+app.UseCors(builder => builder.AllowAnyOrigin()
+                              .AllowAnyMethod()
+                              );
+
+app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
+
+
+app.MapControllers();
+
+app.Run();

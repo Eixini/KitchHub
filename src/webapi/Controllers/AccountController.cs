@@ -8,6 +8,7 @@ using webapi.Models;
 
 namespace webapi.Controllers;
 
+[ApiController]
 [Route("[controller]")]
 public class AccountController : Controller
 {

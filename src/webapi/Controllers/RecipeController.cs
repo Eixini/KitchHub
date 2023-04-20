@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using System.Linq;
 using webapi.Models;
 
 namespace webapi.Controllers;
 
+[ApiController]
 [Route("[controller]")]
 public class RecipeController : Controller
 {
@@ -16,11 +16,6 @@ public class RecipeController : Controller
 	{
 		_logger = logger;
 		_dbContext = dbContext;
-	}
-
-	public IActionResult EnterIngredientsPage()
-	{
-		return View();
 	}
 
     /// <summary>
@@ -62,9 +57,9 @@ public class RecipeController : Controller
     /// </summary>
     /// <param name="search">Вводимая строка, которую нужно валидировать</param>
     /// <returns>Список ингредиентов, которые имеются в базе данных</returns>
-    [HttpPost("{search}")]
-    [Route("[action]/{search}")]
-    public async Task<List<string>> GetValidIngredients([FromRoute]string search)
+    [HttpPost]
+    [Route("[action]")]
+    public async Task<List<string>> GetValidIngredients([FromBody]string search)
 	{
 		return await _dbContext.Ingredients
 			.Select(i => i.Name)
@@ -80,6 +75,7 @@ public class RecipeController : Controller
     /// <returns>Сообщение об процессе создания рецепта</returns>
     [HttpPost]
     [Route("[action]")]
+    [Authorize]
     public IActionResult CreateRecipe([FromBody] CreateRecipeModel request)
 	{
         var ingredientsArray = new List<Ingredient>();
@@ -121,6 +117,7 @@ public class RecipeController : Controller
     /// <returns>Список необходимых данных рецептов</returns>
     [HttpGet]
     [Route("[action]")]
+    [Authorize]
     public IActionResult GetUnpublishedRecipes()
     {
         return Ok(_dbContext.Recipes
@@ -139,12 +136,61 @@ public class RecipeController : Controller
     }
 
     /// <summary>
+    /// Метод для публикации рецепта.
+    /// </summary>
+    /// <param name="recipeId">Id рецепта, который нужно опуубликовать</param>
+    /// <returns>Сообщение о процессе публикации</returns>
+    [HttpPost]
+    [Route("[action]")]
+    [Authorize]
+    public IActionResult PublishRecipe(string recipeId)
+    {
+        var item = _dbContext.Recipes.Find(recipeId);
+
+        if (item == null)
+        {
+            return NotFound();
+        }
+
+        item.Published = true;
+        item.DateUpdated = DateTime.UtcNow;
+
+        //_dbContext.Recipes.Update(item);
+        _dbContext.SaveChanges();
+
+        return Ok("Recipe published");
+    }
+
+    /// <summary>
+    /// Метод для удаления неопубликованного рецепта из базы данных
+    /// </summary>
+    /// <param name="recipeId">id удаляемого рецепта</param>
+    /// <returns>Сообщение о процессе</returns>
+    [HttpDelete]
+    [Route("[action]")]
+    [Authorize]
+    public IActionResult DeleteUnpublishedRecipes([FromBody]long recipeId)
+    {
+        var item = _dbContext.Recipes.Find(recipeId);
+
+        if (item == null)
+        {
+            return NotFound();
+        }
+
+        _dbContext.Recipes.Remove(item);
+        _dbContext.SaveChanges();
+
+        return NoContent();
+    }
+
+    /// <summary>
     /// Метод для получения ингредиентов из "поля тегов" и поиск рецептов по имеющимся тегам.
     /// Ингредиенты получаются из представления в виде массива строк,
     /// после чего, происходит сравнение введенных ингредиентов с ингредиентами рецептов из БД
     /// </summary>
     /// <param name="enteringIngredients"> Введенные игредиенты из "поля тегов"</param>
-    [HttpPost("{enteringIngredients}")]
+    [HttpPost]
     [Route("[action]/{enteringIngredients}")]
     public IActionResult FindRecipeByIngredients([FromRoute]string enteringIngredients)
 	{
@@ -201,8 +247,4 @@ public class RecipeController : Controller
 	   return Ok(recipeResultList);
 	}
 
-	public IActionResult ShowRecipes()
-	{
-		return View();
-	}
 }
