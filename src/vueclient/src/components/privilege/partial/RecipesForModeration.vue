@@ -2,6 +2,9 @@
     <div>
         <h3>Рецепты, отправленные на модерацию</h3>
     </div>
+    <showRecipeDetails :selectRecipe="selectedRecipe"
+                       v-if="modalRecipeVisible"
+                       @closeModalWindow="closeRecipeModalWindow"/>
     <div>
         <table>
             <thead>
@@ -14,7 +17,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="recipe,index in unpublishedRecipes" :key="recipe.recipeId" @click="showDetails(index)">
+                <tr v-for="recipe in unpublishedRecipes" :key="recipe.recipeId" @click="showDetails(recipe)">
                     <td>{{ recipe.recipeId }}</td>
                     <td>{{ recipe.name }}</td>
                     <td>{{ recipe.national }}</td>
@@ -27,15 +30,21 @@
 </template>
 
 <script lang="js">
-import axios from 'axios';
+import AxiosInstance from '@/api_instance';
+import showRecipeDetails from '@/components/privilege/partial/ModeratedRecipeDetails.vue';
 
 export default {
     name: 'recipesForModeration',
 
+    components:{
+        showRecipeDetails,
+    },
+
     mounted(){
         var vm = this;
+
             // Метод для получения списка рецептов, которые не прошли модерацию
-            axios.get("https://localhost:5192/Recipe/GetUnpublishedRecipes")
+            AxiosInstance.get("Recipe/GetUnpublishedRecipes")
                  .then(function(response){
                     vm.unpublishedRecipes = response.data;
                     console.log(vm.unpublishedRecipes);
@@ -48,13 +57,19 @@ export default {
     data() {
         return {
             unpublishedRecipes: [],
+            modalRecipeVisible: false,
+            selectedRecipe: null,
         }
     },
 
     methods: {
         // Обработчик нажатия на строку с рецептом для просмотра деталей
-        showDetails(index){
-            alert('Recipe index ' + index);
+        showDetails(recipe){
+            this.selectedRecipe = recipe;
+            this.modalRecipeVisible = true;
+        },
+        closeRecipeModalWindow(){
+            this.modalRecipeVisible = false;
         }
     }
 }
