@@ -1,11 +1,9 @@
-import axios from 'axios';
-
-const API_URL = 'https://localhost:5192/Account/';
+import AxiosInstance from '@/api_instance';
 
 class AuthService {
 
     login(user) {
-        return axios.post(API_URL + 'Authenticate', {
+        return AxiosInstance.post('Account/Authenticate', {
             email: user.email,
             password: user.password
         })
@@ -30,7 +28,7 @@ class AuthService {
                                         + user.nickname + ' password: ' 
                                         + user.password);
 
-        return axios.post('https://localhost:5192/Account/Registration', {
+        return AxiosInstance.post('Account/Registration', {
             email: user.email,
             nickname: user.nickname,
             password: user.password         // В дальнейшем захэшировать !!!

@@ -15,7 +15,6 @@
 </template>
 
 <script lang="js">
-//import { from } from 'responselike';
 import { mapState } from 'vuex';
 
 export default {
@@ -25,7 +24,6 @@ export default {
     data() {
         return{
             description: "Recipe Text",
-            //recipes: []
         }
     },
     methods:{

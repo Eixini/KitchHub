@@ -47,7 +47,7 @@
 </template>
 
 <script lang="js">
-    import axios from 'axios';
+    import AxiosInstance from '@/api_instance';
     import { store } from '@/store';
     import InputAutocomplete from './partial/InputAutocomplete.vue';
 
@@ -58,7 +58,7 @@
             
             var vm = this;
             // Метод для валидации данных, запрос идет к списку ингредиентов в БД
-            axios.get("https://localhost:5192/Recipe/InitialGetValidIngredients")
+            AxiosInstance.get("Recipe/InitialGetValidIngredients")
                  .then(function(response){
                     vm.avaibleIngredients = response.data;
                  })
@@ -67,7 +67,7 @@
                  });
                 
             // Получение списки типов блюд
-            axios.get("https://localhost:5192/Recipe/GetDishType")
+            AxiosInstance.get("Recipe/GetDishType")
                  .then(function(response){
                     vm.dishType = response.data;
                  })
@@ -76,7 +76,7 @@
                  });
 
             // Получение списка национальностей блюд
-            axios.get("https://localhost:5192/Recipe/GetNationalKitch")
+            AxiosInstance.get("Recipe/GetNationalKitch")
                  .then(function(response){
                     vm.nationalKitch = response.data;
                  })
@@ -125,7 +125,7 @@
             addRecipe(){
                 var vm = this;
                 console.log('Select DishType: ' + vm.selectDishType);
-                axios.post('https://localhost:5192/Recipe/CreateRecipe', {
+                AxiosInstance.post('Recipe/CreateRecipe', {
                     name: vm.recipeName,
                     description: vm.recipeDescription,
                     Type: vm.selectDishType,
@@ -147,6 +147,7 @@
                 vm.selectIngredients.push(ing);
                 
                 // Отладка
+                console.log('======== Ingredients array (after added) ========');
                 store.getters.getIngredients.forEach(el => {
                     console.log(el);
                 });
@@ -158,7 +159,7 @@
                 //delete vm.selectIngredients[index];
 
                 // Отладка
-                console.log('======== Ingredients array ========');
+                console.log('======== Ingredients array (after removed) ========');
                 store.getters.getIngredients.forEach(el => {
                     console.log(el);
                 });

@@ -15,8 +15,8 @@
 <script lang="js">
 
 import { store } from '@/store';
-import axios from 'axios';
 import InputAutocomplete from './partial/InputAutocomplete.vue';
+import AxiosInstance from '@/api_instance';
 
 export default {
 
@@ -31,7 +31,7 @@ export default {
 
         var vm = this;
             // Метод для валидации данных, запрос идет к списку ингредиентов в БД
-            axios.get("https://localhost:5192/Recipe/InitialGetValidIngredients")
+            AxiosInstance.get("Recipe/InitialGetValidIngredients")
                  .then(function(response){
                     vm.avaibleIngredients = response.data;
                     console.log(vm.avaibleIngredients);
@@ -68,10 +68,9 @@ export default {
                 alert("Нет введенных ингредиентов");
             }
             else{
-                let selectIng = ingredientsArray.join(',');
-                console.log(selectIng);
-
-                axios.post("https://localhost:5192/Recipe/FindRecipeByIngredients/" + selectIng)
+                AxiosInstance.post('Recipe/FindRecipeByIngredients', {
+                    enteringIngredientsList: ingredientsArray
+                },)
                      .then(function (response) {
                         store.commit('saveResultRecipes',response.data);
                         // Логика по проверке результатов запроса рецептов

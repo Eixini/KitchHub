@@ -24,7 +24,7 @@
           </div>
 
           <div v-if="currentUser && currentUser.role == 3">
-            <router-link to="/moder">Administration</router-link>
+            <router-link to="/admin">Administration</router-link>
           </div>
 
           <div v-if="!currentUser">
