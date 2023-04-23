@@ -59,7 +59,7 @@
   </div>
 </template>
 
-<script scoped>
+<script lang="js">
 
 export default {
   name: 'App',
@@ -81,7 +81,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 
   #app {
     margin: 0;
