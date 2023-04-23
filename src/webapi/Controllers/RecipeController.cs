@@ -122,7 +122,7 @@ public class RecipeController : Controller
                     r.NationalKitch.National,
                     r.DishType.Type,
                     r.WhoAdded.NickName,
-                    //r.Ingredients.Select(s => s.Name).ToList(),
+                    r.Ingredients,
                 })
             .ToList());
     }
