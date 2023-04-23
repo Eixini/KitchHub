@@ -4,7 +4,9 @@
     </div>
     <showRecipeDetails :selectRecipe="selectedRecipe"
                        v-if="modalRecipeVisible"
-                       @closeModalWindow="closeRecipeModalWindow"/>
+                       @closeModalWindow="closeRecipeModalWindow"
+                       @recipePublicationCompleted="recipePublicationCloseModal"
+                       @recipeDeletionComplete="recipeDeletionCloseModal"/>
     <div>
         <table>
             <thead>
@@ -70,7 +72,23 @@ export default {
         },
         closeRecipeModalWindow(){
             this.modalRecipeVisible = false;
-        }
+        },
+        recipePublicationCloseModal(data){
+            this.modalRecipeVisible = false;
+            console.log('recipePublicationCloseModal DATA: ' + data);
+            const index = this.unpublishedRecipes.findIndex(recId => recId.recipeId == data);
+            if(index !== -1){
+                this.unpublishedRecipes.splice(index,1);
+            }
+        },
+        recipeDeletionCloseModal(data){
+            this.modalRecipeVisible = false;
+            console.log('recipeDeletionCloseModal DATA: ' + data);
+            const index = this.unpublishedRecipes.findIndex(recId => recId.recipeId == data);
+            if(index !== -1){
+                this.unpublishedRecipes.splice(index,1);
+            }
+        },
     }
 }
 </script>
