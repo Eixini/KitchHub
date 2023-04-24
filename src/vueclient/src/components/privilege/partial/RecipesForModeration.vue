@@ -2,7 +2,8 @@
     <div>
         <h3>Рецепты, отправленные на модерацию</h3>
     </div>
-    <showRecipeDetails :selectRecipe="selectedRecipe"
+    <showRecipeDetails class="modal-unpublished-recipe"
+                       :selectRecipe="selectedRecipe"
                        v-if="modalRecipeVisible"
                        @closeModalWindow="closeRecipeModalWindow"
                        @recipePublicationCompleted="recipePublicationCloseModal"
@@ -94,6 +95,11 @@ export default {
 </script>
 
 <style scoped>
+
+.modal-unpublished-recipe{
+    z-index: 999999;
+}
+
 table {
    /*Удаление пустых промежутков между ячейками*/
    border-collapse: collapse;
