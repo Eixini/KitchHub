@@ -52,10 +52,10 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddDbContext<KitchHubDbContext> (options =>
 {
-    options.UseSqlite(builder.Configuration.GetSection("ConnectionStrings:KitchHubDB").Value);
-    //options.UseSqlite("Data Source=\"" +
-    //    Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) +
-    //    "\\KitchHubDB.db\"");
+    //options.UseSqlite(builder.Configuration.GetSection("ConnectionStrings:KitchHubDB").Value);
+    options.UseSqlite("Data Source=\"" +
+        Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) +
+        "\\KitchHubDB.db\"");
 
 });
 
