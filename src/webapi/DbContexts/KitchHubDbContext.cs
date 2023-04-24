@@ -7,7 +7,7 @@ public class KitchHubDbContext : DbContext
     public KitchHubDbContext(DbContextOptions<KitchHubDbContext> options)
         : base(options)
     {
-		//Database.EnsureCreated();
+		Database.EnsureCreated();
 
         if (!Database.CanConnect())
             InitializeRoles();
