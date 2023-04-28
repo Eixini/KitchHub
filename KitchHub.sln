@@ -5,8 +5,6 @@ VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "webapi", "src\webapi\webapi.csproj", "{B3CABC88-44A5-4855-98A4-8BC63C470C99}"
 EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "vueclient", "src\vueclient\vueclient.esproj", "{2D3BC729-F491-4822-89D4-AA1FBFB904AA}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,12 +15,6 @@ Global
 		{B3CABC88-44A5-4855-98A4-8BC63C470C99}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3CABC88-44A5-4855-98A4-8BC63C470C99}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3CABC88-44A5-4855-98A4-8BC63C470C99}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2D3BC729-F491-4822-89D4-AA1FBFB904AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2D3BC729-F491-4822-89D4-AA1FBFB904AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2D3BC729-F491-4822-89D4-AA1FBFB904AA}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{2D3BC729-F491-4822-89D4-AA1FBFB904AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2D3BC729-F491-4822-89D4-AA1FBFB904AA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2D3BC729-F491-4822-89D4-AA1FBFB904AA}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
