@@ -70,19 +70,15 @@
                     ingredientsArray.push(element);
                 });
                 // Проверка на существование ингредиента в контексте данного рецепта, во избежания дублированя
-                // ВНИМАНИЕ! Возможно надо переписать, так как потенциально затратная операция
-                if(ingredientsArray.includes(vm.ingredient)){
+                if(store.getters.getIngredients.includes(vm.ingredient)){
                     alert("Данный ингредиент уже имеется в поле ингредиентов!");
-                    console.log("Include: " + ingredientsArray.includes(vm.ingredient));
                 }
                 else if(!vm.filterAvaibleIngredient.includes(vm.ingredient)){
                     console.log(vm.ingredient);
                     alert("Данный ингредиент не найден!");
                 }
                 else{
-                    //vm.store.addIngredient(vm.ingredient);
                     store.commit('addIngredient',vm.ingredient);
-                    //vm.ingredients.push(vm.ingredient);
                     vm.$emit('ingredientsAdded',vm.ingredient);
                 }
                 
@@ -94,7 +90,6 @@
             deleteIngredient(index) {
                 var vm = this;
                 store.commit('removeIngredient',index);
-                //vm.ingredients.splice(index,1);
                 vm.$emit('ingredientRemoved', index);
             },
 
