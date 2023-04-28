@@ -1,47 +1,39 @@
-const fs = require('fs')
-const path = require('path')
+const path = require('node:path');
+const { defineConfig } = require('@vue/cli-service')
 
-const baseFolder =
-    process.env.APPDATA !== undefined && process.env.APPDATA !== ''
-        ? `${process.env.APPDATA}/ASP.NET/https`
-        : `${process.env.HOME}/.aspnet/https`;
+module.exports = defineConfig({
+  transpileDependencies: true,
 
-const certificateArg = process.argv.map(arg => arg.match(/--name=(?<value>.+)/i)).filter(Boolean)[0];
-const certificateName = certificateArg ? certificateArg.groups.value : "vueclient";
+  publicPath: process.env.NODE_ENV === 'production'
+  ? '/production-sub-path/'
+  : '/',
 
-if (!certificateName) {
-    console.error('Invalid certificate name. Run this script in the context of an npm/yarn script or pass --name=<<app>> explicitly.')
-    process.exit(-1);
-}
-
-const certFilePath = path.join(baseFolder, `${certificateName}.pem`);
-const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
-
-module.exports = {
-
-    devServer: {
-        https: {
-            key: fs.readFileSync(keyFilePath),
-            cert: fs.readFileSync(certFilePath),
-        },
-        proxy: {
-            '/': {
-                target: 'https://localhost:5192/'
-            }
-        },
-        port: 5192
+  devServer: {
+    https: {
+      key: path.resolve('certs/localhost-key.pem'),
+      cert: path.resolve('certs/localhost.pem'),
     },
-    chainWebpack: config => {
+    //public: 'https://localhost:5192/',
 
-        config.module
-          .rule('vue')
-          .use('vue-loader')
-          .tap(options => ({
-            ...options,
-            compilerOptions: {
-              // treat any tag that starts with ion- as custom elements
-              isCustomElement: tag => tag.startsWith('ion-'),
-            }
-          }))
-      }
-}
+    proxy: {
+        '/': {
+            target: 'https://localhost:5192/'
+        }
+    },
+    port: 5192
+  },
+
+  chainWebpack: config => {
+
+      config.module
+        .rule('vue')
+        .use('vue-loader')
+        .tap(options => ({
+          ...options,
+          compilerOptions: {
+            // treat any tag that starts with ion- as custom elements
+            isCustomElement: tag => tag.startsWith('ion-'),
+          }
+        }))
+    }
+})
