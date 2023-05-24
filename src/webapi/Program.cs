@@ -1,15 +1,13 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Diagnostics;
 using System.Reflection;
 using System.Text;
 using webapi;
 
 var builder = WebApplication.CreateBuilder(args);
-var tokenKey = builder.Configuration.GetValue<string>("TokenKey");
-var key = Encoding.ASCII.GetBytes(tokenKey);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -52,7 +50,6 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddDbContext<KitchHubDbContext> (options =>
 {
-    //options.UseSqlite(builder.Configuration.GetSection("ConnectionStrings:KitchHubDB").Value);
     options.UseSqlite("Data Source=\"" +
         Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) +
         "\\KitchHubDB.db\"");
@@ -69,13 +66,18 @@ builder.Services.AddAuthentication(conf =>
     x.SaveToken = true;
     x.TokenValidationParameters = new TokenValidationParameters
     {
+        ValidIssuer = builder.Configuration["JwtToken:Issuer"],
+        ValidAudience = builder.Configuration["JwtToken:Audience"],
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(key),
-        ValidateIssuer = false,
-        ValidateAudience = false
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtToken:SecretKey"])),
+        ValidateIssuer = true,
+        ValidateAudience = true
     };
 });
-builder.Services.AddSingleton<IJWTAuthenticationManager>(new JWTAuthenticationManager(tokenKey));
+builder.Services.AddSingleton<IJwtAuthenticationManager>(
+    new JwtAuthenticationManager(builder.Configuration.GetSection("JwtToken"))
+    );
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -98,7 +100,6 @@ app.UseCors(builder => builder.AllowAnyOrigin()
                               .AllowAnyMethod()
                               .AllowAnyHeader()
                               );
-
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
