@@ -22,7 +22,8 @@
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/",
       "publishAllPorts": true,
-      "useSSL": true
+      "useSSL": true,
+      "workingDirectory": "${workspaceFolder}/src/webapi/webapi.csproj"
     }
   },
   "$schema": "https://json.schemastore.org/launchsettings.json",
