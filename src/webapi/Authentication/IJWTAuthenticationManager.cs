@@ -1,6 +1,6 @@
 ﻿namespace webapi;
 
-public interface IJWTAuthenticationManager
+public interface IJwtAuthenticationManager
 {
     IList<User> Users { get; set; }
 

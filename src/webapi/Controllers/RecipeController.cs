@@ -183,7 +183,7 @@ public class RecipeController : Controller
     /// Ингредиенты получаются из представления в виде массива строк,
     /// после чего, происходит сравнение введенных ингредиентов с ингредиентами рецептов из БД
     /// </summary>
-    /// <param name="enteringIngredients"> Введенные игредиенты из "поля тегов"</param>
+    /// <param name="enteringIngredientsList"> Введенные игредиенты из "поля тегов"</param>
     [HttpPost]
     [Route("[action]")]
     public IActionResult FindRecipeByIngredients([FromBody]EnteringIngredients enteringIngredientsList)

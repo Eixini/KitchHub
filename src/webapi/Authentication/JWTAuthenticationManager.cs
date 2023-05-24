@@ -5,15 +5,16 @@ using System.Text;
 
 namespace webapi;
 
-public class JWTAuthenticationManager : IJWTAuthenticationManager
+public class JwtAuthenticationManager : IJwtAuthenticationManager
 {
-    private readonly string _tokenKey;
+    private readonly IConfigurationSection _configData;
 
     public IList<User> Users { get; set; }
 
-    public JWTAuthenticationManager(string tokenKey)
+    public JwtAuthenticationManager(IConfigurationSection configData)
     {
-        this._tokenKey = tokenKey;
+        this._configData = configData;
+        //Console.WriteLine("JWT ctor data: " + configData.GetSection("SecretKey").Value);
         Users = new List<User>();
     }
 
@@ -25,7 +26,7 @@ public class JWTAuthenticationManager : IJWTAuthenticationManager
         }
 
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(email);
+        var key = Encoding.UTF8.GetBytes(_configData.GetSection("SecretKey").Value);
         var tokenDescripor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new Claim[]
@@ -33,9 +34,11 @@ public class JWTAuthenticationManager : IJWTAuthenticationManager
                 new Claim(ClaimTypes.Email, email)
             }),
             Expires = DateTime.UtcNow.AddHours(1),
+            Issuer = _configData.GetSection("Issuer").Value,
+            Audience = _configData.GetSection("Audience").Value,
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(key),
-                SecurityAlgorithms.HmacSha256Signature)
+                SecurityAlgorithms.HmacSha256Signature),
         };
         var token = tokenHandler.CreateToken(tokenDescripor);
 

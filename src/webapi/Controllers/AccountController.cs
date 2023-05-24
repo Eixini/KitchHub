@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Dynamic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using webapi.Authentication;
 using webapi.Models;
 
@@ -14,23 +12,23 @@ public class AccountController : Controller
 {
     private readonly ILogger<AccountController> _logger;
     private readonly KitchHubDbContext _dbContext;
-    private readonly IJWTAuthenticationManager _jWTAuthenticationManager;
+    private readonly IJwtAuthenticationManager _jwtAuthenticationManager;
 
     public AccountController(ILogger<AccountController> logger,
         KitchHubDbContext dbContext,
-        IJWTAuthenticationManager jWTAuthenticationManager)
+        IJwtAuthenticationManager jWTAuthenticationManager)
     {
         _logger = logger;
         _dbContext = dbContext;
-        _jWTAuthenticationManager = jWTAuthenticationManager;
+        _jwtAuthenticationManager = jWTAuthenticationManager;
     }
 
     [HttpPost]
     [Route("[action]")]
     public IActionResult Authenticate([FromBody] Login request)
     {
-        _jWTAuthenticationManager.Users = _dbContext.Users.ToList();
-        var token = _jWTAuthenticationManager.Authenticate(request.Email,PasswordHashing.PasswordSHA512(request.Password));
+        _jwtAuthenticationManager.Users = _dbContext.Users.ToList();
+        var token = _jwtAuthenticationManager.Authenticate(request.Email,PasswordHashing.PasswordSHA512(request.Password));
 
         // Проверка введенных данных (если пользователь есть в системе и введенные данные корректны)
         if (token == null)
