@@ -103,7 +103,7 @@ public class RecipeController : Controller
     }
 
     /// <summary>
-    /// Метод возвращает рецепты, Microsoft.EntityFrameworkCore.DbUpdateException: "An error occurred while saving the entity changes. See the inner exception for details."которые были созданы пользователями,
+    /// Метод возвращает рецепты, которые были созданы пользователями,
     /// но не были опубликованы, так как ожидают модерации
     /// </summary>
     /// <returns>Список необходимых данных рецептов</returns>
