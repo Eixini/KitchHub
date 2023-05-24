@@ -1,0 +1,30 @@
+version: '3'
+
+networks:
+  kitchhub:
+    driver: bridge
+
+services:
+  # Backend
+  webapi:
+    build: webapi/
+    environment:
+      - ASPNETCORE_URLS=https://+:5192;
+    ports:
+      - 5192:80
+    networks:
+      - kitchhub
+
+  # Frontend
+  vueclient:
+    build: vueclient/
+    ports:
+      - 5192:80
+    networks:
+      - kitchhub
+
+  # DataBase
+  kitchhub_db:
+    image: nouchka/sqlite3:latest
+    volumes:
+      - ~/home/User/KitchHubDB.db
