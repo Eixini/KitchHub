@@ -12,6 +12,8 @@ module.exports = defineConfig({
     https: {
       key: path.resolve('certs/localhost-key.pem'),
       cert: path.resolve('certs/localhost.pem'),
+      //key: path.resolve(process.env.CERT_KEY),
+      //cert: path.resolve(process.env.CERT),
     },
     //public: 'https://localhost:5192/',
 

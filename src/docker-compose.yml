@@ -7,17 +7,17 @@ networks:
 services:
   # Backend
   webapi:
-    build: webapi/
+    build: ./webapi
     environment:
       - ASPNETCORE_URLS=https://+:5192;
-    ports:
-      - 5192:80
     networks:
       - kitchhub
 
   # Frontend
   vueclient:
-    build: vueclient/
+    build: ./vueclient
+    environment:
+      - BASE_URLS=https://+:5192;
     ports:
       - 5192:80
     networks:
