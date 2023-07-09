@@ -7,24 +7,23 @@ networks:
 services:
   # Backend
   webapi:
-    build: ./webapi
+    build:
+      context: .
+      dockerfile: ./webapi/Dockerfile
     environment:
       - ASPNETCORE_URLS=https://+:5192;
+      - SQLITE_PATH=/home/User/KitchHubDB.db
     networks:
       - kitchhub
+    #volumes:
+    #  - ~/home/User/KitchHubDB.db
 
   # Frontend
   vueclient:
-    build: ./vueclient
+    build: vueclient
     environment:
       - BASE_URLS=https://+:5192;
     ports:
       - 5192:80
     networks:
       - kitchhub
-
-  # DataBase
-  kitchhub_db:
-    image: nouchka/sqlite3:latest
-    volumes:
-      - ~/home/User/KitchHubDB.db
