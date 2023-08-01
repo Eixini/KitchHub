@@ -49,9 +49,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddDbContext<KitchHubDbContext> (options =>
 {
-    options.UseSqlite("Data Source=\"" +
-        Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) +
-        "\\KitchHubDB.db\"");
+    options.UseSqlite(builder.Configuration["ConnectionStrings:KitchHubDB"]);
 
 });
 
@@ -93,13 +91,13 @@ else
 {
     app.UseDefaultFiles();
     app.UseStaticFiles();
+    app.UseHttpsRedirection();
 }
 
 app.UseCors(builder => builder.AllowAnyOrigin()
                               .AllowAnyMethod()
                               .AllowAnyHeader()
                               );
-app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
