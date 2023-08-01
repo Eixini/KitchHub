@@ -7,7 +7,7 @@ using webapi.Models;
 namespace webapi.Controllers;
 
 //[ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class AccountController : Controller
 {
     private readonly ILogger<AccountController> _logger;
