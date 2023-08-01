@@ -6,7 +6,7 @@ module.exports = defineConfig({
 
   publicPath: process.env.NODE_ENV === 'production'
   ? '/'
-  : '/dev/',
+  : '/',
 
   devServer: {
     https: {
@@ -15,11 +15,11 @@ module.exports = defineConfig({
       //key: path.resolve(process.env.CERT_KEY),
       //cert: path.resolve(process.env.CERT),
     },
-    //public: 'https://localhost:5192/',
+    //public: 'https://localhost:5000/',
 
     proxy: {
         '/': {
-            target: 'https://localhost:5192/'
+            target: 'http://localhost:5192/api/'
         }
     },
     port: 5192
