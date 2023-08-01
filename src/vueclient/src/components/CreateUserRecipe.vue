@@ -14,7 +14,7 @@
                            @ingredientsAdded="ingredientAdd"
                            @ingredientRemoved="ingredientRemove"/>
 
-        <div>
+        <div class="national-select">
             <span> Национальность блюда </span>
             <select v-model="selectNationalKitch">
                 <option v-for="nationalKitchElement in nationalKitch" v-bind:key="nationalKitchElement">
@@ -23,7 +23,7 @@
             </select>
         </div>
 
-        <div>
+        <div class="dishtype-select">
             <span> Вид блюда </span>
             <select v-model="selectDishType">
                 <option v-for="dishTypeElement in dishType" v-bind:key="dishTypeElement">
@@ -32,12 +32,13 @@
             </select>
         </div>
 
-        <div>
+        <div class="recipe-description">
             <textarea v-model="recipeDescription" placeholder="Введите описание рецепта, процесс приготовления"></textarea>
         </div>
 
         <div>
             <button id="addRecipeButton"
+                    class="btn-send"
                     type="button"
                     v-on:click="addRecipe()">
                 Добавить рецепт
@@ -173,3 +174,68 @@
         },
     }
 </script>
+
+<style scoped>
+
+.content {
+    margin: 0em;
+    padding: 0em;
+    display: block;
+    align-items: center;
+}
+
+.enter-recipename {
+    font-family: 'Ubuntu';
+    font-size: 1em;
+    color: #263238;
+
+    width: max-content;
+    align-items: center;
+    margin: 1em;
+}
+
+.national-select {
+
+}
+
+.dishtype-select {
+
+}
+
+.recipe-description {
+
+}
+
+textarea {
+
+    font-family: 'Ubuntu';
+    font-size: 1em;
+
+    width: 100%;
+    resize: none;
+    padding: 0.5em;
+    border-radius: 0.3em;
+    border:0;
+    height: 150px;
+}
+
+.btn-send {
+    
+    font-family: 'Ubuntu';
+    font-size: 1em;
+
+    outline: none;
+    border: 0.3em solid transparent; 
+    border-radius: 0.3em;
+    box-sizing: border-box;
+    color: #263238;
+    background-color: #35BFA2;
+    cursor: pointer;
+    position: fixed;
+    bottom: 1em;
+    z-index: 500;
+    align-items: center;
+
+}
+
+</style>

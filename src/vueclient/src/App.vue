@@ -1,54 +1,7 @@
 <template>
   <div id="app">
     <div class="header">
-      <div class="container">
-        <div class="nav">
-          KitchHub
-        </div>
-        <div class="navbar">
-
-          <div>
-            <router-link to="/">Home</router-link>
-          </div>
-
-          <div>
-            <router-link to="/enteringingredients">Recipe Search</router-link>
-          </div>
-
-          <div v-if="currentUser">
-            <router-link to="/createrecipe">Create Recipe</router-link>
-          </div>
-
-          <div v-if="currentUser && (currentUser.role == 2 || currentUser.role == 3)">
-            <router-link to="/moder">Moderation</router-link>
-          </div>
-
-          <div v-if="currentUser && currentUser.role == 3">
-            <router-link to="/admin">Administration</router-link>
-          </div>
-
-          <div v-if="!currentUser">
-            <li>
-              <router-link to="/login"> Login </router-link>
-            </li>
-          </div>
-
-          <div v-if="!currentUser">
-            <li>
-              <router-link to="/register"> Reg </router-link>
-            </li>
-          </div>
-          
-          <div v-if="currentUser">
-            <li>
-              <router-link to="/profile"> {{ currentUser.email }} </router-link>
-            </li>
-            <li>
-              <a @click.prevent="logOut"> LogOut </a>
-            </li>
-          </div>
-        </div>
-      </div>
+        <NavBar/>
     </div>
     <div class="main">
         <div class="content-center">
@@ -61,76 +14,56 @@
 
 <script lang="js">
 
+import NavBar from './components/partial/NavBar.vue'
+
 export default {
   name: 'App',
   components: {
+    NavBar
   },
-
-  computed: {
-    currentUser() {
-      return this.$store.state.auth.user;
-    }
-  },
-
-  methods: {
-    logOut() {
-      this.$store.dispatch('auth/logout');
-      this.$router.push('/login');
-    }
-  }
 };
 </script>
 
-<style scoped>
+<style>
+
+  html {
+    padding: 0em;
+    margin: 0em;
+  }
+
+  body {
+    padding: 0em;
+    margin: 0em;
+    font-family: 'Ubuntu';
+    font-size: 14pt;
+    background-color: #263238;
+  }
 
   #app {
     margin: 0;
+    padding: 0;
     box-sizing: border-box;
   }
 
-  .container{
-    max-width: 800px;
-    padding: 10px;
-    margin: 0 auto;
+  .header {
+    height: 2.5em;
   }
 
   .content-center {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-left: 3em;
+    padding-right: 3em;
   }
 
-  .header {
-    background-color: black;
-    margin: 0;
-    padding: 0%;
-  }
-
-  .header .container {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .navbar {
-    display: flex;
-  }
-
-  .navbar div {
-    margin-right: 10px;
-  }
-
-  a {
-    /* Стили для router-link */
+  .main {
+    padding: 1%;
     color: white;
-    text-decoration: none;
   }
 
-  .nav {
-    color: white
-  }
-
-  .navbar div:last-child {
-    margin-right: 0;
+  .main a {
+    color:#35BFA2
   }
 
 </style>

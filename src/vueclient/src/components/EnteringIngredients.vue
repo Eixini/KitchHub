@@ -1,13 +1,13 @@
 <template>
 
     <div class="content">
-
         <InputAutocomplete :avaible-ingredients="avaibleIngredients"/>
 
         <button id="sendIngredientsButton"
                 type="button"
                 v-on:click="sendIngredients"
-                class="btn-send">Запросить</button>
+                class="btn-send">Запросить
+        </button>
     </div>
 
 </template>
@@ -91,62 +91,40 @@ export default {
 
 <style scoped>
 
-    .btn-send {
+html {
+    padding: 0em;
+    margin: 0em;
+}
 
+body {
+    margin: 0em;
+    padding: 0em;
+}
 
-        box-sizing: border-box;
-        padding: 0 13px;
-        margin: 0 15px 15px 0;
-        outline: none;
-        border: 1px solid transparent; 
-        border-radius: 3px;
-        height: 32px;
-        line-height: 32px;
-        font-size: 14px;
-        font-weight: 500;
-        text-decoration: none;
-        color: #fff;
-        background-color: #65a3be;
-        cursor: pointer;
-        user-select: none;
-        appearance: none;
-        touch-action: manipulation;
-        position: sticky;
+.content {
+    display: flex;
+    margin: 0em;
+    padding: 0em;
+}
 
-        position: fixed;
-        bottom: 0px;
-        z-index:500;
-        align-items: center;
+.btn-send {
+    
+    font-family: 'Ubuntu';
+    font-size: 1em;
 
-    }
+    outline: none;
+    border: 0.3em solid transparent; 
+    border-radius: 0.3em;
+    box-sizing: border-box;
+    color: #263238;
+    background-color: #35BFA2;
+    cursor: pointer;
+    position: fixed;
+    bottom: 1em;
+    z-index: 500;
+    align-items: center;
 
-    .btn-send:focus-visible {
+}
 
-        box-shadow: 0 0 0 3px lightskyblue;
-
-    }
-
-    .btn-send:hover {
-
-        border-color: transparent;
-        background-color: #4986a1;
-        color: #fff;
-
-    }
-
-    .btn-send:active {
-
-        border-color: #6f9cbc !important;
-        background-color: #367089 !important;
-
-    }
-
-    .btn-send:disabled {
-
-        background-color: #558cb7;
-        color: #fff;
-        pointer-events: none;
-
-    }
 
 </style>

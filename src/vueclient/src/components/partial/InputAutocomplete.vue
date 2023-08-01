@@ -2,7 +2,7 @@
     <div id="enterIngredients">
         <input type="text"
                ref="enterLine"
-               class="form__field"
+               class="form-field"
                autocomplete="off"
                placeholder="Введите ингредиент"
                v-model="ingredient"
@@ -10,13 +10,15 @@
                @keydown.enter.prevent="addIngredient()"
                @focus="modal = true"
                @focusout="desactivate"/>
-        <div v-if="filterAvaibleIngredient && modal">
+        <div class="available-ingredients" v-if="filterAvaibleIngredient && modal">
             <ul v-for="validResult in filterAvaibleIngredient" v-bind:key="validResult" class="ingredient-list">
                 <li @click="setIngredient(validResult)" class="ingredient-list-item">{{ validResult }}</li>
             </ul>
         </div>
         <div id="ingredient-field">
-            <button type="button" v-for="(ing, index) in $store.getters.getIngredients"
+            <button type="button"
+                    class="ingredient-tag"
+                    v-for="(ing, index) in $store.getters.getIngredients"
                     :key="index"
                     v-on:click="deleteIngredient(index)">{{ ing }}</button>
             </div>
@@ -24,7 +26,6 @@
 </template>
 
 <script lang="js">
-    //import { ref } from 'vue';
     import { store } from '@/store';
 
     export default {
@@ -102,3 +103,72 @@
         }
     }
 </script>
+
+<style scoped>
+
+.form-field{
+
+    font-family: 'Ubuntu';
+    font-size: 1em;
+    color: #263238;
+
+    width: max-content;
+
+    margin: 1em;
+    margin-bottom: 0em;
+}
+
+/* class available-ingredients
+    The class is responsible for the drop-down list with ingredients available for input.
+*/
+.available-ingredients {
+    background-color: #86DFCB;
+
+    margin-top: 0em;
+}
+
+#ingredient-field {
+    display: flex;
+    margin: 1em;
+}
+
+.ingredient-tag {
+    font-family: 'Ubuntu';
+    font-size: 1em;
+
+    outline: none;
+    border: 0.3em solid transparent; 
+    border-radius: 0.3em;
+    box-sizing: border-box;
+    color: #263238;
+    background-color: #35BFA2;
+    cursor: pointer;
+
+    margin: 0.3em;
+}
+
+/* class ingredient-list
+    This class is responsible for the entire list of suggested values (dropdown list).
+*/
+.ingredient-list {
+
+}
+
+/* class ingredient-list-item
+    This class is responsible for the individual element of the dropdown list for autocompletion.
+*/
+.ingredient-list-item {
+    font-family: 'Ubuntu';
+    font-size: 1em;
+    color: #263238;
+
+    display: flex;
+}
+
+.ingredient-list-item:hover {
+    background-color: #35BFA2;
+
+    display: flex;
+}
+
+</style>
